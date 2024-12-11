@@ -13,6 +13,7 @@ import {
 import { Stack } from "expo-router";
 import { SIZES, COLORS, FONT } from "@/constants"; // Ensure your color/font constants align with the design
 import Icon from "react-native-vector-icons/FontAwesome"; // Import FontAwesome icons
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Home = () => {
   const [activeTab, setActiveTab] = useState("Login");
@@ -34,6 +35,8 @@ const Home = () => {
   const handleTabSwitch = (tab: any) => setActiveTab(tab);
 
   const platforms = ["google", "facebook", "instagram", "linkedin"];
+  const [showPasswordLogin, setShowPasswordLogin] = useState(false);
+  const [showPasswordRegister, setShowPasswordRegister] = useState(false);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -49,11 +52,13 @@ const Home = () => {
         source={require("../assets/images/loginback.png")}
         style={styles.backgroundImage}
       >
-        <View>
-          <Text>Trendify</Text>
-          
-        </View>
         <ScrollView contentContainerStyle={styles.container}>
+          <View style={styles.bannerBox}>
+            <ImageBackground
+              source={require("../assets/images/banner-removebg-preview.png")}
+              style={styles.banner}
+            />
+          </View>
           <View style={styles.card}>
             {/* Header Section */}
             <Text style={styles.headerText}>{activeTab}</Text>
@@ -93,18 +98,27 @@ const Home = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="Email Address"
-                  placeholderTextColor={COLORS.gray}
+                  placeholderTextColor={COLORS.default}
                   value={email}
                   onChangeText={setEmail}
                 />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Password"
-                  placeholderTextColor={COLORS.gray}
-                  secureTextEntry
-                  value={password}
-                  onChangeText={setPassword}
-                />
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    // style={styles.input}
+                    placeholder="Password"
+                    placeholderTextColor={COLORS.default}
+                    secureTextEntry={!showPasswordLogin}
+                    value={password}
+                    onChangeText={setPassword}
+                  />
+                  <MaterialCommunityIcons
+                    name={showPasswordLogin ? "eye-off" : "eye"}
+                    size={24}
+                    color="#aaa"
+                    style={styles.icon}
+                    onPress={() => setShowPasswordLogin(!showPasswordLogin)}
+                  />
+                </View>
                 <View style={styles.rememberForgotContainer}>
                   <View style={[styles.rememberContainer, { marginRight: 20 }]}>
                     <TouchableOpacity
@@ -133,25 +147,36 @@ const Home = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="Email Address"
-                  placeholderTextColor={COLORS.gray}
+                  placeholderTextColor={COLORS.default}
                   value={email}
                   onChangeText={setEmail}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="Username"
-                  placeholderTextColor={COLORS.gray}
+                  placeholderTextColor={COLORS.default}
                   value={username}
                   onChangeText={setUsername}
                 />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Password"
-                  placeholderTextColor={COLORS.gray}
-                  secureTextEntry
-                  value={password}
-                  onChangeText={setPassword}
-                />
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    // style={styles.input}
+                    placeholder="Password"
+                    placeholderTextColor={COLORS.default}
+                    secureTextEntry={!showPasswordRegister}
+                    value={password}
+                    onChangeText={setPassword}
+                  />
+                  <MaterialCommunityIcons
+                    name={showPasswordRegister ? "eye-off" : "eye"}
+                    size={24}
+                    color="#aaa"
+                    style={styles.icon}
+                    onPress={() =>
+                      setShowPasswordRegister(!showPasswordRegister)
+                    }
+                  />
+                </View>
                 <TouchableOpacity
                   style={styles.loginButton}
                   onPress={handleRegister}
@@ -186,6 +211,23 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: COLORS.default,
+    borderRadius: 40,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+    width: "100%",
+  },
+  icon: {
+    position: "absolute", // Make it position-relative to the container
+    right: 10, // Adjust the distance from the right edge
+    top: "50%", // Vertically center it within the container
+    transform: [{ translateY: -12 }], // Offset for proper centering
+  },
+
   backgroundImage: {
     flex: 1,
     justifyContent: "center",
@@ -193,6 +235,17 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
+  bannerBox: {
+    width: "100%",
+    alignItems: "center", // Center the banner horizontally
+    marginBottom: 20, // Add space below the banner
+  },
+  banner: {
+    width: "100%", // Ensure the banner spans the full width
+    height: 100, // Set an appropriate height
+    resizeMode: "contain", // Keep the aspect ratio
+  },
+
   container: {
     flexGrow: 1,
     justifyContent: "center",
@@ -215,7 +268,7 @@ const styles = StyleSheet.create({
   agreementText: {
     textAlign: "center",
     fontSize: SIZES.small,
-    color: COLORS.gray,
+    color: COLORS.default,
     marginBottom: 20,
   },
   linkText: {
@@ -228,7 +281,7 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: SIZES.medium,
-    color: COLORS.gray,
+    color: COLORS.default,
     marginHorizontal: 10,
   },
   activeTabText: {
@@ -238,8 +291,8 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: COLORS.tertiary,
-    borderRadius: 10,
+    // borderColor: COLORS.default,
+    borderRadius: 40,
     padding: 10,
     width: "100%",
     marginBottom: 10,
@@ -259,7 +312,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderWidth: 1,
-    borderColor: COLORS.gray,
+    borderColor: COLORS.default,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 5,
@@ -270,26 +323,31 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.secondary,
   },
   rememberText: {
-    color: COLORS.gray,
+    color: COLORS.default,
   },
   forgotText: {
     color: COLORS.secondary,
   },
   loginButton: {
-    backgroundColor: COLORS.secondary,
+    backgroundColor: COLORS.white,
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 40,
     width: "100%",
     alignItems: "center",
     marginBottom: 20,
+    shadowColor: "#e64777", // Shadow color
+    shadowOffset: { width: 0, height: 0 }, // No offset, shadow is centered
+    shadowOpacity: 0.9, // Intensity of the shadow
+    shadowRadius: 53, // Blur radius, replicates the spread effect
+    elevation: 9,
   },
   loginButtonText: {
-    color: COLORS.white,
+    color: COLORS.primary,
     fontSize: SIZES.medium,
     fontFamily: FONT.bold,
   },
   orText: {
-    color: COLORS.gray,
+    color: COLORS.default,
     marginBottom: 10,
   },
   socialContainer: {
@@ -307,7 +365,7 @@ const styles = StyleSheet.create({
   },
   socialIcon: {
     fontSize: SIZES.large,
-    color: COLORS.gray,
+    color: COLORS.default,
   },
   socialButtonsContainer: {
     flexDirection: "row",
