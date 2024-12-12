@@ -9,11 +9,17 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import { Stack } from "expo-router";
+import { RelativePathString, router, Stack } from "expo-router";
 import { SIZES, COLORS, FONT } from "@/constants"; // Ensure your color/font constants align with the design
 import Icon from "react-native-vector-icons/FontAwesome"; // Import FontAwesome icons
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { createUser } from "@/service/appwrite.service";
+import service from "@/service";
+import index from "./main";
+import main from "./main";
+
 
 const Home = () => {
   const [activeTab, setActiveTab] = useState("Login");
@@ -22,15 +28,99 @@ const Home = () => {
   const [rememberPassword, setRememberPassword] = useState(false);
   const [username, setUsername] = useState(""); // New state for username in Register
 
-  const handleLogin = () => {
-    console.log("Logging in with:", email, password);
-    // Add your login logic here
+  const handleLogin = async () => {
+    // console.log("Logging in with:", email, password);
+    if (!email || !password) {
+      Alert.alert("Error", "Please fill up all fields");
+    }
+    if (password.length > 8) {
+      Alert.alert(
+        "Error",
+        "Password must be between 8 and 265 characters long"
+      );
+    }
+
+    try {
+      const response = await service.AppWrite.login(
+        email,
+        password,
+       
+      );
+  
+      console.log(response);
+  
+      // Navigate to the main screen
+      router.replace('/main' as RelativePathString);
+    } catch (error) {
+      console.error(error);
+  
+      // Handle specific error messages
+      if (error instanceof Error && error.message) {
+        if (error.message.includes("Invalid credentials")) {
+          Alert.alert("Login Error", "Invalid email or password. Please try again.");
+        } else if (error.message.includes("User is not verified")) {
+          Alert.alert(
+            "Login Error",
+            "Your email is not verified. Please check your inbox and verify your account."
+          );
+        } else {
+          Alert.alert("Login Error", error.message);
+        }
+      } else {
+        Alert.alert("Login Error", "An unknown error occurred.");
+      }
+    }
   };
 
-  const handleRegister = () => {
-    console.log("Registering with:", email, username, password);
-    // Add your registration logic here
+  const handleRegister = async () => {
+    if (!email || !password || !username) {
+      Alert.alert("Error", "Please fill up all fields");
+      return;
+    }
+  
+    if (password.length < 8 || password.length > 256) {
+      Alert.alert("Error", "Password must be between 8 and 256 characters long");
+      return;
+    }
+  
+    let preferences = null;
+  
+    try {
+      const response = await service.AppWrite.createUser(
+        email,
+        password,
+        username,
+        preferences
+      );
+  
+      console.log(response);
+  
+      // Navigate to the main screen
+      router.replace(`/main` as RelativePathString);
+    } catch (error) {
+      console.error(error);
+  
+      // Extract the error message for the user
+      if (error instanceof Error && error.message) {
+        if (error.message.includes("same id, email, or phone already exists")) {
+          Alert.alert(
+            "Registration Error",
+            "The email is already registered. Please use a different email."
+          );
+        } else if (error.message.includes("Invalid document structure")) {
+          Alert.alert(
+            "Registration Error",
+            "Failed to save user details. Please try again."
+          );
+        } else {
+          Alert.alert("Registration Error", error.message);
+        }
+      } else {
+        Alert.alert("Registration Error", "An unknown error occurred.");
+      }
+    }
   };
+  
 
   const handleTabSwitch = (tab: any) => setActiveTab(tab);
 
