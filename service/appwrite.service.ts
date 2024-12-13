@@ -96,25 +96,35 @@ export async function login(email: any, password: any) {
   }
 }
 
-
 // function for get current user
 export async function getCurrentUser() {
-    try {
-      const currentAccount = await account.get();
-      if (!currentAccount) throw new Error("No current account found");
-  
-      const currentUser = await database.listDocuments(
-        appWriteConfig.DATABASEID,
-        appWriteConfig.USERCOLLECTIONID,
-        [Query.equal('accountid', currentAccount.$id)]
-      );
-  
-      if (currentUser.documents.length === 0) throw new Error("User not found");
-  
-      return currentUser.documents[0];
-    } catch (error) {
-      console.error("Error fetching current user: ", error);
-      return null;
-    }
+  try {
+    const currentAccount = await account.get();
+    if (!currentAccount) throw new Error("No current account found");
+
+    const currentUser = await database.listDocuments(
+      appWriteConfig.DATABASEID,
+      appWriteConfig.USERCOLLECTIONID,
+      [Query.equal("accountid", currentAccount.$id)]
+    );
+
+    if (currentUser.documents.length === 0) throw new Error("User not found");
+
+    return currentUser.documents[0];
+  } catch (error) {
+    console.error("Error fetching current user: ", error);
+    return null;
   }
-  
+}
+
+//function for log out
+// Sign Out
+export async function logOut() {
+  try {
+    const session = await account.deleteSession("current");
+
+    return session;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+}
