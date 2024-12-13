@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { RelativePathString, router, Stack } from "expo-router";
+import { Redirect, RelativePathString, router, Stack } from "expo-router";
 import { SIZES, COLORS, FONT } from "@/constants"; // Ensure your color/font constants align with the design
 import Icon from "react-native-vector-icons/FontAwesome"; // Import FontAwesome icons
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -19,6 +19,7 @@ import { createUser } from "@/service/appwrite.service";
 import service from "@/service";
 import index from "./main";
 import main from "./main";
+import { useGlobalContext } from "@/context/GlobalProvider"; 
 
 
 const Home = () => {
@@ -27,6 +28,7 @@ const Home = () => {
   const [password, setPassword] = useState("");
   const [rememberPassword, setRememberPassword] = useState(false);
   const [username, setUsername] = useState(""); // New state for username in Register
+  const { setUser, setIsLogged } = useGlobalContext();
 
   const handleLogin = async () => {
     // console.log("Logging in with:", email, password);
@@ -47,7 +49,11 @@ const Home = () => {
        
       );
   
-      console.log(response);
+      const result = await service.AppWrite.getCurrentUser();
+      setUser(result);
+      setIsLogged(true);
+
+
   
       // Navigate to the main screen
       router.replace('/main' as RelativePathString);
@@ -93,7 +99,10 @@ const Home = () => {
         preferences
       );
   
-      console.log(response);
+      // console.log(response);
+      setUser(response);
+      setIsLogged(true);
+
   
       // Navigate to the main screen
       router.replace(`/main` as RelativePathString);
@@ -127,6 +136,12 @@ const Home = () => {
   const platforms = ["google", "facebook", "instagram", "linkedin"];
   const [showPasswordLogin, setShowPasswordLogin] = useState(false);
   const [showPasswordRegister, setShowPasswordRegister] = useState(false);
+  
+  const { loading, isLogged } = useGlobalContext();
+
+  if (!loading && isLogged) {
+    return <Redirect href={{ pathname: "/main" }} />;
+}
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -466,3 +481,5 @@ const styles = StyleSheet.create({
 });
 
 export default Home;
+
+

@@ -1,8 +1,14 @@
 import { Stack } from "expo-router";
 import { useCallback } from "react";
-import { useFonts, Nunito_400Regular, Nunito_500Medium, Nunito_700Bold } from "@expo-google-fonts/nunito";
+import {
+  useFonts,
+  Nunito_400Regular,
+  Nunito_500Medium,
+  Nunito_700Bold,
+} from "@expo-google-fonts/nunito";
 import * as SplashScreen from "expo-splash-screen";
 import { View } from "react-native";
+import GlobalProvider from "@/context/GlobalProvider";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,9 +28,11 @@ const Layout = () => {
   if (!fontsLoaded) return null;
 
   return (
-    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <Stack />
-    </View>
+    <GlobalProvider>
+      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+        <Stack />
+      </View>
+    </GlobalProvider>
   );
 };
 
