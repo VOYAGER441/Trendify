@@ -1,25 +1,22 @@
+import { COLORS, FONT, SIZES } from "@/constants"; // Ensure your color/font constants align with the design
+import { useGlobalContext } from "@/context/GlobalProvider";
+import service from "@/service";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Redirect, RelativePathString, router, Stack } from "expo-router";
 import React, { useState } from "react";
 import {
-  SafeAreaView,
-  ScrollView,
-  Text,
-  StyleSheet,
+  Alert,
   ImageBackground,
   Linking,
-  View,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
-  Alert,
+  View,
 } from "react-native";
-import { Redirect, RelativePathString, router, Stack } from "expo-router";
-import { SIZES, COLORS, FONT } from "@/constants"; // Ensure your color/font constants align with the design
 import Icon from "react-native-vector-icons/FontAwesome"; // Import FontAwesome icons
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { createUser } from "@/service/appwrite.service";
-import service from "@/service";
-import index from "./main";
-import main from "./main";
-import { useGlobalContext } from "@/context/GlobalProvider"; 
 
 
 const Home = () => {

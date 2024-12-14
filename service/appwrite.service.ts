@@ -128,3 +128,8 @@ export async function logOut() {
     throw new Error(error);
   }
 }
+
+
+export async function updatePreference(userId:any) {
+  
+}
