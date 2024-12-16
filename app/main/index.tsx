@@ -1,4 +1,7 @@
 import { COLORS, FONT, SIZES } from "@/constants";
+import service from "@/service";
+// import { COLORS, FONT, SIZES } from "@/constants";
+// import service from "@/service";
 import { RelativePathString, router, Stack } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -9,41 +12,79 @@ import {
   ScrollView,
   Modal,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import { StyleSheet } from "react-native";
 
-
-
-
-
-
-
-
-
-
-
-
-
 const index = () => {
-  const dataBasePreferencesData: any[] = []; // Placeholder data
-  
+  const categories = [
+    "regional",
+    "technology",
+    "lifestyle",
+    "business",
+    "general",
+    "programming",
+    "science",
+    "entertainment",
+    "world",
+    "sports",
+    "finance",
+    "academia",
+    "politics",
+    "health",
+    "opinion",
+    "food",
+    "game",
+  ];
+
+  const [dataBasePreferencesData, setDataBasePreferencesData] = useState<any[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [showModal, setShowModal] = useState(false);
 
-  // Check for data and show modal when there's no data
+  // Fetch user preferences
+  const fetchUserPreferences = async () => {
+    try {
+      const preferences = await service.AppWrite.getCurrentUserCategory();
+      // console.log("Fetched preferences:", preferences);
+
+      if (preferences) {
+        setDataBasePreferencesData(preferences);
+      }
+    } catch (error) {
+      console.error("Error fetching user preferences:", error);
+    }
+  };
+
+  // Add or remove category on selection
+  const toggleCategory = (category: string) => {
+    setSelectedCategories((prev: string[]) =>
+      prev.includes(category)
+        ? prev.filter((item: string) => item !== category)
+        : [...prev, category]
+    );
+  };
+
+  // Submit selected categories to the backend
+  const handleSubmit = async () => {
+    // console.log("Selected Categories:", selectedCategories);
+    await service.AppWrite.updatePreference(selectedCategories);
+    setShowModal(false);
+    // router.push("/home" as RelativePathString);
+  };
+
   useEffect(() => {
+    fetchUserPreferences(); // Fetch preferences on mount
+  }, []);
+
+  useEffect(() => {
+    // Show modal if no preferences exist
     if (dataBasePreferencesData.length === 0) {
       setShowModal(true);
     } else {
       router.push("/home" as RelativePathString);
+      
     }
   }, [dataBasePreferencesData]);
-
-  // Function to handle category selection
-  const handleCategorySelect = (category: string) => {
-    console.log("Selected Category:", category);
-    setShowModal(false);
-    // TODO: Save the selected category to your database or state management
-  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -61,36 +102,60 @@ const index = () => {
       >
         <ScrollView contentContainerStyle={styles.container}>
           <View>
-            <TouchableOpacity>
-              <Text style={styles.headerText}>Welcome</Text>
-            </TouchableOpacity>
+            <Modal animationType="slide" transparent visible={showModal}>
+              <View style={styles.modalContainer}>
+                <View style={styles.modalContent}>
+                  <Text style={styles.headerText}>Choose whatever you like</Text>
+                  <Text style={styles.subText}>Choose at least 5 topics</Text>
+
+                  {/* Category List */}
+                  <FlatList
+                    data={categories}
+                    keyExtractor={(item: any) => item}
+                    numColumns={3}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity
+                        style={[
+                          styles.categoryItem,
+                          selectedCategories.includes(item) &&
+                            styles.selectedCategory,
+                        ]}
+                        onPress={() => toggleCategory(item)}
+                      >
+                        <Text
+                          style={[
+                            styles.categoryText,
+                            selectedCategories.includes(item) &&
+                              styles.selectedCategoryText,
+                          ]}
+                        >
+                          {item}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                  />
+
+                  {/* Continue Button */}
+                  <TouchableOpacity
+                    style={[
+                      styles.continueButton,
+                      selectedCategories.length < 5 && styles.disabledButton,
+                    ]}
+                    disabled={selectedCategories.length < 5}
+                    onPress={handleSubmit}
+                  >
+                    <Text style={styles.continueText}>Continue</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
           </View>
         </ScrollView>
       </ImageBackground>
-
-      {/* Modal for Category Selection */}
-      <Modal visible={showModal} animationType="slide" transparent>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Select Your Preferred Categories</Text>
-            <TouchableOpacity onPress={() => handleCategorySelect("Technology")}>
-              <Text style={styles.categoryText}>Technology</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleCategorySelect("Sports")}>
-              <Text style={styles.categoryText}>Sports</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleCategorySelect("Politics")}>
-              <Text style={styles.categoryText}>Politics</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleCategorySelect("Entertainment")}>
-              <Text style={styles.categoryText}>Entertainment</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </SafeAreaView>
   );
 };
+
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -100,28 +165,63 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent overlay
   },
   modalContent: {
-    width: "80%",
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 20,
-    alignItems: "center",
-    elevation: 5, // Shadow for Android
+    width: "90%",
+    backgroundColor: COLORS.lightWhite,
+    borderRadius: SIZES.xxLarge,
+    padding: SIZES.medium,
   },
-  modalTitle: {
-    fontSize: SIZES.medium,
-    fontFamily: FONT.bold,
-    marginBottom: 20,
-    color: "black",
+  headerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: "center",
+    marginBottom: SIZES.medium,
+  },
+  subText: {
+    textAlign: "center",
+    color: COLORS.gray,
+    marginBottom:SIZES.large,
+  },
+  categoryItem: {
+    flex: 1,
+    margin: 5,
+    paddingVertical: 10,
+    borderRadius: 40,
+    borderWidth: 1,
+    borderColor: COLORS.default,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  selectedCategory: {
+    backgroundColor: COLORS.primary, // Highlighted color
+    borderColor: COLORS.primary,
   },
   categoryText: {
-    fontSize: SIZES.medium,
-    color: COLORS.default,
-    marginBottom: 10,
-    textAlign: "center",
+    fontFamily:FONT.bold,
+    fontSize: 14,
+    color: COLORS.primary,
   },
+  selectedCategoryText: {
+    color: COLORS.tertiary, // Change text color for selected category
+  },
+  continueButton: {
+    backgroundColor: COLORS.default,
+    borderRadius: 20,
+    paddingVertical: 12,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  disabledButton: {
+    backgroundColor:COLORS.gray2,
+  },
+  continueText: {
+    color: COLORS.tertiary,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+
   icon: {
     position: "absolute", // Make it position-relative to the container
     right: 10, // Adjust the distance from the right edge
@@ -144,12 +244,6 @@ const styles = StyleSheet.create({
     padding: 20,
   },
 
-  headerText: {
-    fontFamily: FONT.bold,
-    fontSize: SIZES.large,
-    color: "black",
-    marginBottom: 10,
-  },
   agreementText: {
     textAlign: "center",
     fontSize: SIZES.small,

@@ -1,10 +1,9 @@
 import {
-  Client,
   Account,
-  ID,
-  Models,
   Avatars,
+  Client,
   Databases,
+  ID,
   Query,
 } from "react-native-appwrite";
 
@@ -129,7 +128,55 @@ export async function logOut() {
   }
 }
 
+// Function to update the preferences field
+export async function updatePreference(selectedCategories: any) {
+  try {
+    const response = await getCurrentUser();
+    // console.log("User Response:", response);
 
-export async function updatePreference(userId:any) {
-  
+    const userId = response?.$id; // Ensure userId is valid
+
+    // Step 3: Update the preferences field
+    const updatePayload = {
+      preferences: selectedCategories, // Update "preferences" with the selected categories
+    };
+
+    const permissions = ['read("any")']; // Optional: Set permissions as needed
+
+    const result = await database.updateDocument(
+      appWriteConfig.DATABASEID, // Database ID
+      appWriteConfig.USERCOLLECTIONID, // Collection ID
+      userId + "", // Document ID (associated with the user)
+      updatePayload, // Data to update
+      permissions // Permissions (optional)
+    );
+
+    // console.log("Updated Document:", result);
+    return result; // Return the updated document
+  } catch (error: any) {
+    console.error("Error updating preferences:", error.message);
+    throw error; // Optional: rethrow the error for further handling
+  }
+}
+
+// get category data
+export async function getCurrentUserCategory() {
+  try {
+    const currentAccount = await account.get();
+    if (!currentAccount) throw new Error("No current account found");
+    // console.log(currentAccount);
+
+    const currentUser = await database.listDocuments(
+      appWriteConfig.DATABASEID,
+      appWriteConfig.USERCOLLECTIONID,
+      [Query.equal("accountid", currentAccount.$id)]
+    );
+
+    if (currentUser.documents.length === 0) throw new Error("User not found");
+
+    return currentUser.documents[0].preferences;
+  } catch (error) {
+    console.error("Error fetching current user: ", error);
+    return null;
+  }
 }
