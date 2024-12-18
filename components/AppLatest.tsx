@@ -13,77 +13,77 @@ const ImageSliderData = [
   {
     title: "Breaking News: New Tech Innovations",
     category: "Technology",
-    image: "/assets/images/logo-color.png",
+    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
     time: "2024-12-18 09:00",
     author: "John Doe",
   },
   {
     title: "Latest Updates on AI Advancements",
     category: "AI",
-    image: "/assets/images/logo-color.png",
+    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
     time: "2024-12-18 10:30",
     author: "Jane Smith",
   },
   {
     title: "New Trends in Mobile App Development",
     category: "Mobile",
-    image: "/assets/images/logo-color.png",
+    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
     time: "2024-12-18 11:45",
     author: "Alice Johnson",
   },
   {
     title: "Exploring the Future of Virtual Reality",
     category: "Virtual Reality",
-    image: "/assets/images/logo-color.png",
+    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
     time: "2024-12-18 13:00",
     author: "Bob Brown",
   },
   {
     title: "Cybersecurity in 2024: What You Need to Know",
     category: "Cybersecurity",
-    image: "/assets/images/logo-color.png",
+    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
     time: "2024-12-18 14:15",
     author: "Charlie Green",
   },
   {
     title: "Cloud Computing: The Future of Data Storage",
     category: "Cloud",
-    image: "/assets/images/logo-color.png",
+    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
     time: "2024-12-18 15:30",
     author: "Diana White",
   },
   {
     title: "The Impact of 5G on Global Connectivity",
     category: "Telecommunications",
-    image: "/assets/images/logo-color.png",
+    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
     time: "2024-12-18 16:45",
     author: "Ethan Black",
   },
   {
     title: "Blockchain: Revolutionizing Industries",
     category: "Blockchain",
-    image: "/assets/images/logo-color.png",
+    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
     time: "2024-12-18 17:30",
     author: "Fayla Harris",
   },
   {
     title: "How Quantum Computing is Shaping the Future",
     category: "Quantum Computing",
-    image: "/assets/images/logo-color.png",
+    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
     time: "2024-12-18 18:00",
     author: "George King",
   },
   {
     title: "The Rise of Smart Cities",
     category: "Smart Cities",
-    image: "/assets/images/logo-color.png",
+    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
     time: "2024-12-18 19:00",
     author: "Hannah Lee",
   },
   {
     title: "Exploring New Frontiers in Space Technology",
     category: "Space Technology",
-    image: "/assets/images/logo-color.png",
+    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
     time: "2024-12-18 20:30",
     author: "Ian Scott",
   },
@@ -101,6 +101,9 @@ const AppLatest = () => {
             <SliderItem item={item} index={index} />
           )}
           keyExtractor={(item, index) => index.toString()} // Ensure each item has a unique key
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled
         />
       </View>
     </View>
@@ -116,7 +119,7 @@ const styles = StyleSheet.create({
     height: "auto", // Let height adjust
   },
   text: {
-    top: 70,
+    top: 100,
     left: -50,
     fontSize: SIZES.xxLarge,
     color: COLORS.default,
