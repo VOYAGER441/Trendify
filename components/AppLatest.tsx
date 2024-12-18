@@ -1,15 +1,21 @@
 import { COLORS, FONT, SIZES } from "@/constants";
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
-  FlatList,
+  Dimensions,
 } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
+import Animated, {
+  useSharedValue,
+  useAnimatedScrollHandler,
+} from "react-native-reanimated";
 import SliderItem from "./SliderItem";
 
-const ImageSliderData = [
+const { width } = Dimensions.get("screen");
+
+export const ImageSliderData = [
   {
     title: "Breaking News: New Tech Innovations",
     category: "Technology",
@@ -25,86 +31,107 @@ const ImageSliderData = [
     author: "Jane Smith",
   },
   {
-    title: "New Trends in Mobile App Development",
-    category: "Mobile",
+    title: "Latest Updates on AI Advancements",
+    category: "AI",
     image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 11:45",
-    author: "Alice Johnson",
+    time: "2024-12-18 10:30",
+    author: "Jane Smith",
   },
   {
-    title: "Exploring the Future of Virtual Reality",
-    category: "Virtual Reality",
+    title: "Latest Updates on AI Advancements",
+    category: "AI",
     image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 13:00",
-    author: "Bob Brown",
+    time: "2024-12-18 10:30",
+    author: "Jane Smith",
   },
   {
-    title: "Cybersecurity in 2024: What You Need to Know",
-    category: "Cybersecurity",
+    title: "Latest Updates on AI Advancements",
+    category: "AI",
     image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 14:15",
-    author: "Charlie Green",
+    time: "2024-12-18 10:30",
+    author: "Jane Smith",
   },
   {
-    title: "Cloud Computing: The Future of Data Storage",
-    category: "Cloud",
+    title: "Latest Updates on AI Advancements",
+    category: "AI",
     image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 15:30",
-    author: "Diana White",
+    time: "2024-12-18 10:30",
+    author: "Jane Smith",
   },
   {
-    title: "The Impact of 5G on Global Connectivity",
-    category: "Telecommunications",
+    title: "Latest Updates on AI Advancements",
+    category: "AI",
     image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 16:45",
-    author: "Ethan Black",
+    time: "2024-12-18 10:30",
+    author: "Jane Smith",
   },
   {
-    title: "Blockchain: Revolutionizing Industries",
-    category: "Blockchain",
+    title: "Latest Updates on AI Advancements",
+    category: "AI",
     image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 17:30",
-    author: "Fayla Harris",
+    time: "2024-12-18 10:30",
+    author: "Jane Smith",
   },
   {
-    title: "How Quantum Computing is Shaping the Future",
-    category: "Quantum Computing",
+    title: "Latest Updates on AI Advancements",
+    category: "AI",
     image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 18:00",
-    author: "George King",
+    time: "2024-12-18 10:30",
+    author: "Jane Smith",
   },
-  {
-    title: "The Rise of Smart Cities",
-    category: "Smart Cities",
-    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 19:00",
-    author: "Hannah Lee",
-  },
-  {
-    title: "Exploring New Frontiers in Space Technology",
-    category: "Space Technology",
-    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 20:30",
-    author: "Ian Scott",
-  },
+  // Add more data items...
 ];
 
 const AppLatest = () => {
+  const scrollX = useSharedValue(0); // SharedValue to track scroll position
+  const [currentIndex, setCurrentIndex] = useState(0); // Track the current page index
+  const [data, setData] = useState(ImageSliderData); // Initialize `data` as an array
+
+  // Scroll handler for updating the scrollX value
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    scrollX.value = event.contentOffset.x;
+  });
+
+  // Handler to track visible items and update the current index
+  const onViewableItemsChanged = React.useRef(({ viewableItems }: any) => {
+    if (viewableItems.length > 0) {
+      setCurrentIndex(viewableItems[0].index);
+    }
+  }).current;
+
   return (
     <View style={styles.container}>
-      {/* Main Content */}
-      <Text style={styles.text}>Latest News</Text>
-      <View>
-        <FlatList
-          data={ImageSliderData}
-          renderItem={({ item, index }) => (
-            <SliderItem item={item} index={index} />
-          )}
-          keyExtractor={(item, index) => index.toString()} // Ensure each item has a unique key
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled
-        />
+      <Text style={styles.text}>Latest News &#x27A4;</Text>
+
+      {/* Image Slider */}
+      <Animated.FlatList
+        data={data}
+        renderItem={({ item, index }) => (
+          <SliderItem item={item} index={index} scrollX={scrollX} />
+        )}
+        keyExtractor={(item, index) => index.toString()}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        pagingEnabled
+        onScroll={scrollHandler} // Attach scroll handler
+        scrollEventThrottle={16}
+        // onEndReached={() => setData((prevData) => [...prevData, ...ImageSliderData])} // Append new data
+        // onEndReachedThreshold={0.5}
+        onViewableItemsChanged={onViewableItemsChanged} // Track visible items
+        viewabilityConfig={{ viewAreaCoveragePercentThreshold: 50 }}
+      />
+
+      {/* Pagination Dots */}
+      <View style={styles.pagination}>
+        {data.map((_, index) => (
+          <View
+            key={index}
+            style={[
+              styles.dot,
+              currentIndex === index ? styles.activeDot : styles.inactiveDot,
+            ]}
+          />
+        ))}
       </View>
     </View>
   );
@@ -115,15 +142,34 @@ const styles = StyleSheet.create({
     position: "relative",
     justifyContent: "center",
     alignItems: "center",
-    width: "100%", // Explicitly make it take full width
-    height: "auto", // Let height adjust
+    width: "100%",
+    height: "auto",
   },
   text: {
-    top: 100,
-    left: -50,
-    fontSize: SIZES.xxLarge,
+    top: 65,
+    marginLeft: 20,
+    alignSelf: "flex-start",
+    fontSize: SIZES.xLarge,
     color: COLORS.default,
     fontFamily: FONT.bold,
+  },
+  pagination: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 16,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
+  },
+  activeDot: {
+    backgroundColor: COLORS.primary, // Active dot color
+  },
+  inactiveDot: {
+    backgroundColor: COLORS.secondary, // Inactive dot color
   },
 });
 

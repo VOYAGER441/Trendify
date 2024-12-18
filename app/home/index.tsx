@@ -10,7 +10,8 @@ import { SearchBar, Avatar } from "@rneui/themed"; // Correct import
 import { Stack } from "expo-router";
 import { COLORS, SIZES } from "@/constants";
 import { TextInput } from "react-native";
-import AppLatest from "@/components/AppLatest";
+import AppLatest, { ImageSliderData } from "@/components/AppLatest";
+import AppAllNews from "@/components/AppAllNews";
 // import { Avatar } from 'react-native-elements';
 
 const Index = () => {
@@ -43,22 +44,25 @@ const Index = () => {
                 containerStyle={styles.avatarContainer}
                 titleStyle={styles.avatarTitle}
                 overlayContainerStyle={styles.avatarOverlay}
+                
               />
             </View>
           ),
         }}
       />
-
-      <ImageBackground
-        source={require("../../assets/images/home.png")}
-        style={styles.backgroundImage}
-      >
-        <View style={styles.container}>
-          <View style={{ width: "100%" }}>
-            <AppLatest />
+      <ScrollView>
+        {/* <ImageBackground
+          source={require("../../assets/images/home.png")}
+          style={styles.backgroundImage}
+        > */}
+          <View style={styles.container}>
+            <View style={{ width: "100%" }}>
+              <AppLatest />
+              <AppAllNews />
+            </View>
           </View>
-        </View>
-      </ImageBackground>
+        {/* </ImageBackground> */}
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -85,7 +89,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   searchInputContainer: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.gray2,
     borderRadius: 40,
   },
   headerContainer: {
@@ -107,14 +111,17 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     marginRight: 10,
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.gray2,
+    padding:2
   },
   avatarTitle: {
     color: COLORS.primary, // Set the color of the initials text
     fontWeight: "bold", // Make the initials bold
   },
   avatarOverlay: {
-    backgroundColor: COLORS.white, // Background color for the avatar
+    backgroundColor: COLORS.gray2,
+    // Background color for the avatar
+    
   },
 });
 

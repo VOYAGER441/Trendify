@@ -1,10 +1,15 @@
 import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { color } from "@rneui/base";
+import { TouchableOpacity } from "react-native";
 import { COLORS, FONT } from "@/constants";
+import Animated, {
+  Extrapolate,
+  interpolate,
+  useAnimatedStyle,
+} from "react-native-reanimated";
 
-type ImageSliderType = {
+export type ImageSliderType = {
   title: string;
   image: string;
   category: string;
@@ -15,91 +20,118 @@ type ImageSliderType = {
 type Props = {
   item: ImageSliderType;
   index: number;
+  scrollX: Animated.SharedValue<number>;
 };
 
 const { width } = Dimensions.get("screen");
 
-const SliderItem = ({ item, index }: Props) => {
+const SliderItem = ({ item, index, scrollX }: Props) => {
+  // Animated style for parallax effect
+  const animationsStyle = useAnimatedStyle(() => {
+    const translateX = interpolate(
+      scrollX.value,
+      [(index - 1) * width, index * width, (index + 1) * width],
+      [-width * 0.35, 0, width * 0.35],
+      Extrapolate.CLAMP
+    );
+
+    const scale = interpolate(
+      scrollX.value,
+      [(index - 1) * width, index * width, (index + 1) * width],
+      [0.8, 1, 0.8],
+      Extrapolate.CLAMP
+    );
+
+    return {
+      transform: [
+        { translateX },
+        { scale },
+      ],
+    };
+  });
+
   return (
-    <View style={style.itemContainer}>
-      <Image
-        source={{ uri: item.image }}
-        style={{ width: 300, height: 300, borderRadius: 40 }}
-      />
+    <Animated.View style={[styles.itemContainer, animationsStyle]}>
+      <Image source={{ uri: item.image }} style={styles.image} />
       <LinearGradient
         colors={["transparent", "rgba(0,0,0,0.8)"]}
-        style={style.back}
+        style={styles.overlay}
       >
-        <View>
-          <View style={style.categoryContainer}>
-            <Text style={[style.textContainer, style.category]}>
-              {item.category}
-            </Text>
+        <TouchableOpacity>
+          <View style={styles.contentContainer}>
+              <Text style={styles.category}>Top 10 🔥</Text>
+            <View style={styles.categoryContainer}>
+              <Text style={styles.category}>{item.category}</Text>
+            </View>
+            <Text style={styles.title}>{item.title}</Text>
+            <View style={styles.footer}>
+              <Text style={styles.author}>{item.author}</Text>
+              <Text style={styles.time}>{item.time}</Text>
+            </View>
           </View>
-          <View style={style.titleContainer}>
-            <Text style={[style.textContainer, style.title]}>{item.title}</Text>
-          </View>
-          {/* <Text>{item.}</Text> */}
-          <View style={style.authTimeContainer}>
-            <Text style={[style.textContainer, style.authTime]}>
-              {item.author}
-            </Text>
-            <Text style={[style.textContainer, style.authTime]}>
-              {item.time}
-            </Text>
-          </View>
-        </View>
+        </TouchableOpacity>
       </LinearGradient>
-    </View>
+    </Animated.View>
   );
 };
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   itemContainer: {
-    // justifyContent: "center",
     alignItems: "center",
-    gap: 20,
     width: width,
-    top: 100,
+    marginTop: 70,
   },
-  back: {
+  image: {
+    width: 340,
+    height: 340,
+    borderRadius: 30,
+  },
+  overlay: {
     position: "absolute",
-    height: 300,
-    width: 300,
-    padding: 20,
-    borderRadius: 40,
+    width: 340,
+    height: 340,
+    borderRadius: 30,
+    padding: 16,
+    justifyContent: "flex-end",
   },
-  textContainer: {
-    color: COLORS.tertiary,
-    fontFamily: FONT.bold,
-  },
-  category: {
-    // color:COLORS.tertiary
-    textAlign: "center",
-  },
-  title: {
-    textAlign: "left",
-    // left:0,
+  contentContainer: {
+    gap: 10,
   },
   categoryContainer: {
+    // flex:1,
+    alignSelf: "flex-start",
     backgroundColor: COLORS.primary,
-    width: 100,
-    borderRadius: 40,
-    top: -10,
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
   },
-  titleContainer: {
-    width: 100,
-    bottom: -100,
+  category: {
+    color: COLORS.tertiary,
+    fontFamily: FONT.bold,
+    fontSize: 12,
   },
-  authTime: {
-    textAlign: "right",
-    zIndex:2,
-    // position:"static"
+  title: {
+    color: COLORS.tertiary,
+    fontFamily: FONT.bold,
+    fontSize: 16,
+    marginTop: 8,
   },
-  authTimeContainer: {
-    bottom:-100,
-    position:"fixed",
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 12,
+  },
+  author: {
+    color: COLORS.tertiary,
+    fontFamily: FONT.regular,
+    fontSize: 12,
+  },
+  time: {
+    color: COLORS.tertiary,
+    fontFamily: FONT.regular,
+    fontSize: 12,
   },
 });
 
 export default SliderItem;
+
