@@ -12,7 +12,9 @@ import { COLORS, SIZES } from "@/constants";
 import { TextInput } from "react-native";
 import AppLatest, { ImageSliderData } from "@/components/AppLatest";
 import AppAllNews from "@/components/AppAllNews";
+import AppFooter from "@/components/AppFooter";
 // import { Avatar } from 'react-native-elements';
+import { Provider as PaperProvider } from "react-native-paper";
 
 const Index = () => {
   const [search, setSearch] = useState("");
@@ -44,7 +46,6 @@ const Index = () => {
                 containerStyle={styles.avatarContainer}
                 titleStyle={styles.avatarTitle}
                 overlayContainerStyle={styles.avatarOverlay}
-                
               />
             </View>
           ),
@@ -55,12 +56,15 @@ const Index = () => {
           source={require("../../assets/images/home.png")}
           style={styles.backgroundImage}
         > */}
-          <View style={styles.container}>
-            <View style={{ width: "100%" }}>
-              <AppLatest />
-              <AppAllNews />
-            </View>
+        <View style={styles.container}>
+          <View style={{ width: "100%" }}>
+            <AppLatest />
+            <AppAllNews />
+            <PaperProvider>
+              <AppFooter />
+            </PaperProvider>
           </View>
+        </View>
         {/* </ImageBackground> */}
       </ScrollView>
     </SafeAreaView>
@@ -112,7 +116,7 @@ const styles = StyleSheet.create({
   avatarContainer: {
     marginRight: 10,
     backgroundColor: COLORS.gray2,
-    padding:2
+    padding: 2,
   },
   avatarTitle: {
     color: COLORS.primary, // Set the color of the initials text
@@ -121,7 +125,6 @@ const styles = StyleSheet.create({
   avatarOverlay: {
     backgroundColor: COLORS.gray2,
     // Background color for the avatar
-    
   },
 });
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { SIZES, COLORS, FONT } from "@/constants";
 
@@ -14,7 +15,7 @@ const newsData = [
   },
   {
     id: 2,
-    img: "https://images.unsplash.com/photo-1535689182613-62e5d0cc1eec?crop=entropy&cs=tinysrgb&fit=max&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDl8fG5ld3N8ZW58MHx8fHwxNjg5MjM1NzE5&ixlib=rb-1.2.1&q=80&w=1080",
+    img: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?crop=entropy&cs=tinysrgb&fit=max&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDd8fG5ld3N8ZW58MHx8fHwxNjg5MjM1NzE5&ixlib=rb-1.2.1&q=80&w=1080",
     title: "Technology Advances: A New Era",
     description:
       "The latest breakthrough in technology is set to change the world. Find out what’s new and how it will affect us.",
@@ -22,7 +23,7 @@ const newsData = [
   },
   {
     id: 3,
-    img: "https://images.unsplash.com/photo-1600302648684-b46467e3da72?crop=entropy&cs=tinysrgb&fit=max&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDkxfG5ld3N8ZW58MHx8fHwxNjg5MjM1NzE5&ixlib=rb-1.2.1&q=80&w=1080",
+    img: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?crop=entropy&cs=tinysrgb&fit=max&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDd8fG5ld3N8ZW58MHx8fHwxNjg5MjM1NzE5&ixlib=rb-1.2.1&q=80&w=1080",
     title: "Global News: Earthquake Strikes",
     description:
       "A massive earthquake has struck the city. Here are the updates and the current situation on the ground.",
@@ -32,111 +33,89 @@ const newsData = [
 
 const AllNewsCard = () => {
   return (
-    <View style={styles.content}>
-      <Text style={styles.text}>ALL News &#x27A4;</Text>
+    <View style={styles.container}>
+      <Text style={styles.headerText}>ALL News &#x27A4;</Text>
       {newsData.map(({ id, img, title, description, date }) => (
-        <TouchableOpacity key={id}>
-          <View style={styles.card}>
-            <View style={styles.cardTop}>
-              <Image
-                alt=""
-                resizeMode="cover"
-                style={styles.cardImg}
-                source={{ uri: img }}
-              />
-
-                <Text style={styles.cardTitle}>{title}</Text>
-
-            </View>
-
-            <View style={styles.cardBody}>
-              <View style={styles.cardHeader}>
-                <Text style={styles.cardDate}>{date}</Text>
+        <TouchableOpacity key={id} style={styles.card}>
+          <Image source={{ uri: img }} style={styles.image} />
+          <LinearGradient
+            colors={["transparent", "rgba(0,0,0,0.8)"]}
+            style={styles.overlay}
+          >
+            <View style={styles.contentContainer}>
+              <Text style={styles.title}>{title}</Text>
+              <Text style={styles.description}>{description}</Text>
+              <View style={styles.footer}>
+                <Text style={styles.date}>{date}</Text>
+                <AntDesign name="doubleright" size={20} color={COLORS.tertiary} />
               </View>
-
-              <Text style={styles.cardDescription}>{description}</Text>
             </View>
-
-            <View style={styles.cardFooter}>
-              <AntDesign name="doubleright" size={24} color="black" />
-            </View>
-          </View>
+          </LinearGradient>
         </TouchableOpacity>
       ))}
     </View>
   );
 };
 
-export default AllNewsCard;
-
 const styles = StyleSheet.create({
-  content: {
-    paddingTop: 8,
-    paddingHorizontal: 16,
+  container: {
+    padding: 16,
+    backgroundColor: COLORS.lightWhite,
   },
-  text: {
-    // top: 5,
-    marginLeft: 10,
-    alignSelf: "flex-start",
+  headerText: {
     fontSize: SIZES.xLarge,
     color: COLORS.default,
     fontFamily: FONT.bold,
-
+    marginBottom: 16,
   },
   card: {
-    position: "relative",
-    borderRadius: 30,
-    backgroundColor: COLORS.lightWhite,
     marginBottom: 16,
-    shadowColor: "rgba(0, 0, 0, 0.5)",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-    marginTop:10,
-    // fontFamily:
+    borderRadius: 20,
+    overflow: "hidden",
+    shadowColor: "rgba(0, 0, 0, 0.2)",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 4,
   },
-  cardTop: {
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-  },
-  cardImg: {
+  image: {
     width: "100%",
-    height: 160,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
+    height: 200,
   },
-  cardBody: {
-    padding: 12,
-  },
-  cardHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#232425",
-    marginRight: "auto",
-    fontFamily:FONT.bold
-  },
-  cardDate: {
-    fontSize: 12,
-    color: "#595a63",
-  },
-  cardDescription: {
-    marginTop: 8,
-    fontSize: 14,
-    color: "#595a63",
-  },
-  cardFooter: {
-    padding: 12,
-    flexDirection: "row",
+  overlay: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: "40%",
+    padding: 16,
     justifyContent: "flex-end",
+  },
+  contentContainer: {
+    justifyContent: "flex-end",
+  },
+  title: {
+    fontSize: 16,
+    fontFamily: FONT.bold,
+    color: COLORS.tertiary,
+    marginBottom: 8,
+  },
+  description: {
+    fontSize: 14,
+    fontFamily: FONT.regular,
+    color: COLORS.tertiary,
+    marginBottom: 8,
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
+  },
+  date: {
+    fontSize: 12,
+    color: COLORS.tertiary,
+    fontFamily: FONT.regular,
   },
 });
+
+export default AllNewsCard;
