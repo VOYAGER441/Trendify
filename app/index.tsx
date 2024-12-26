@@ -312,6 +312,8 @@ const Home = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    alignItems: "center",
+    justifyContent: "center", 
   },
   passwordContainer: {
     flexDirection: "row",
@@ -339,20 +341,21 @@ const styles = StyleSheet.create({
   },
   bannerBox: {
     width: "100%",
-    alignItems: "center", // Center the banner horizontally
+    alignItems: "center",
+    justifyContent:"center", // Center the banner horizontally
     marginBottom: 20, // Add space below the banner
   },
   banner: {
     width: "100%", // Ensure the banner spans the full width
     height: 100, // Set an appropriate height
-    resizeMode: "contain", // Keep the aspect ratio
+    resizeMode: 'cover', // Keep the aspect ratio
   },
 
   container: {
     flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    // padding: 20,
   },
   card: {
     backgroundColor: COLORS.optional,
