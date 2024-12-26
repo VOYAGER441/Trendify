@@ -7,6 +7,8 @@ import AppLatest from "@/components/AppLatest";
 import AppAllNews from "@/components/AppAllNews";
 import AppFooter from "@/components/AppFooter";
 import { Provider as PaperProvider } from "react-native-paper";
+import { LinearGradient } from "expo-linear-gradient";
+import AppSearch from "@/components/AppSearch";
 
 const Index = () => {
   const [search, setSearch] = useState("");
@@ -16,51 +18,46 @@ const Index = () => {
   };
 
   return (
-    <PaperProvider>
-      <SafeAreaView style={styles.safeArea}>
-        <Stack.Screen
-          options={{
-            headerTitle: "",
-            headerTransparent: true,
-            header: () => (
-              <View style={styles.headerContainer}>
-                <SearchBar
-                  placeholder="Type Here..."
-                  onChangeText={updateSearch}
-                  value={search}
-                  containerStyle={styles.searchContainer}
-                  inputContainerStyle={styles.searchInputContainer}
-                  inputStyle={{ color: "black" }}
-                />
-                <Avatar
-                  rounded
-                  title="MD"
-                  size={40}
-                  containerStyle={styles.avatarContainer}
-                  titleStyle={styles.avatarTitle}
-                  overlayContainerStyle={styles.avatarOverlay}
-                />
-              </View>
-            ),
-          }}
-        />
-        <View style={styles.mainContainer}>
-          <ScrollView contentContainerStyle={styles.scrollContent}>
-            <AppLatest />
-            <AppAllNews />
-          </ScrollView>
-          <View style={{width:"80%",alignSelf:'center',flex:1}}>
-            <AppFooter />
+    <LinearGradient
+    
+    colors={[  "#e64777", "#e377ab", "#d9a0ce", "#d6c4e0", "#e3e3e3"]} // Gradient colors
+      start={{ x: 0, y: 0 }} // Start from bottom-left
+      end={{ x: 0, y: 0 }} // End at top-right (creating a "to right top" effect)
+      style={styles.gradientBackground}>
+      <PaperProvider>
+        <SafeAreaView style={styles.safeArea}>
+          <Stack.Screen
+            options={{
+              headerTitle: "",
+              headerTransparent: true,
+              header: () => (
+               <AppSearch/>
+              ),
+            }}
+          />
+          <View style={styles.mainContainer}>
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+              <AppLatest />
+              <AppAllNews />
+            </ScrollView>
+            <View style={{ width: "80%", alignSelf: "center", flex: 1 }}>
+              <AppFooter />
+            </View>
           </View>
-        </View>
-      </SafeAreaView>
-    </PaperProvider>
+        </SafeAreaView>
+      </PaperProvider>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1, // Ensure SafeAreaView takes up the full height
+  },
+  gradientBackground: {
+    flex: 1, // Make sure it fills the screen
+    justifyContent: "center", // Center the content
+    alignItems: "center", // Center horizontally
   },
   mainContainer: {
     flex: 1, // Ensures proper layout for the footer to stay at the bottom
@@ -70,7 +67,7 @@ const styles = StyleSheet.create({
     paddingBottom: 80, // Space to prevent overlap with footer
   },
   searchInputContainer: {
-    backgroundColor: COLORS.gray2,
+    backgroundColor: COLORS.lightWhite,
     borderRadius: 40,
   },
   headerContainer: {
@@ -89,7 +86,7 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     marginRight: 10,
-    backgroundColor: COLORS.gray2,
+    backgroundColor: COLORS.lightWhite,
     padding: 2,
   },
   avatarTitle: {
@@ -97,7 +94,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   avatarOverlay: {
-    backgroundColor: COLORS.gray2,
+    backgroundColor: COLORS.lightWhite,
   },
 });
 

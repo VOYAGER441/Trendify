@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { SIZES, COLORS, FONT } from "@/constants";
+import { RelativePathString, router } from "expo-router";
 
 const newsData = [
   {
@@ -31,12 +32,19 @@ const newsData = [
   },
 ];
 
+
+
 const AllNewsCard = () => {
+
+const handleOnPress=()=>{
+  router.push('/news' as RelativePathString)
+}
+
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>ALL News &#x27A4;</Text>
       {newsData.map(({ id, img, title, description, date }) => (
-        <TouchableOpacity key={id} style={styles.card}>
+        <TouchableOpacity key={id} style={styles.card} onPress={handleOnPress}>
           <Image source={{ uri: img }} style={styles.image} />
           <LinearGradient
             colors={["transparent", "rgba(0,0,0,0.8)"]}
@@ -60,7 +68,7 @@ const AllNewsCard = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: COLORS.lightWhite,
+    // backgroundColor: COLORS.lightWhite,
   },
   headerText: {
     fontSize: SIZES.xLarge,

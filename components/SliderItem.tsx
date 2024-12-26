@@ -8,6 +8,7 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import { RelativePathString, router } from "expo-router";
 
 export type ImageSliderType = {
   title: string;
@@ -43,12 +44,15 @@ const SliderItem = ({ item, index, scrollX }: Props) => {
     );
 
     return {
-      transform: [
-        { translateX },
-        { scale },
-      ],
+      transform: [{ translateX }, { scale }],
     };
   });
+
+  const handleOnPress = () => {
+    router.push('/news' as RelativePathString,/* {
+      params:{item},
+    } */)
+  };
 
   return (
     <Animated.View style={[styles.itemContainer, animationsStyle]}>
@@ -57,9 +61,9 @@ const SliderItem = ({ item, index, scrollX }: Props) => {
         colors={["transparent", "rgba(0,0,0,0.8)"]}
         style={styles.overlay}
       >
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleOnPress}>
           <View style={styles.contentContainer}>
-              <Text style={styles.category}>Top 10 🔥</Text>
+            <Text style={styles.category}>Top 10 🔥</Text>
             <View style={styles.categoryContainer}>
               <Text style={styles.category}>{item.category}</Text>
             </View>
@@ -134,4 +138,3 @@ const styles = StyleSheet.create({
 });
 
 export default SliderItem;
-

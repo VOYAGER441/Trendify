@@ -1,26 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLORS } from "@/constants";
-import { RelativePathString, router } from "expo-router"; // Import the router from expo-router
+import { useRouter, usePathname, RelativePathString } from "expo-router";
+
+// Define a type for valid MaterialCommunityIcons names
+type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
 
 const AppFooter = () => {
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const router = useRouter();
+  const pathname = usePathname(); // Get the current route path
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const routes: {
-    key: string;
-    title: string;
-    icon: "home" | "grid" | "human-greeting-variant";
-    path: string; // Add paths for navigation
-  }[] = [
+  // Define routes with strict typing for the icon property
+  const routes: { key: string; title: string; icon: IconName; path: string }[] = [
     { key: "home", title: "Home", icon: "home", path: "/home" },
     { key: "category", title: "Category", icon: "grid", path: "/category" },
     { key: "profile", title: "Profile", icon: "human-greeting-variant", path: "/profile" },
   ];
 
+  useEffect(() => {
+    // Update the selectedIndex based on the current route
+    const currentRouteIndex = routes.findIndex((route) => route.path === pathname);
+    if (currentRouteIndex !== -1) {
+      setSelectedIndex(currentRouteIndex);
+    }
+  }, [pathname]);
+
   const handleNavigation = (index: number) => {
     if (selectedIndex !== index) {
-      setSelectedIndex(index);
       router.push(routes[index].path as RelativePathString); // Navigate to the selected route
     }
   };
@@ -31,7 +39,7 @@ const AppFooter = () => {
         <TouchableOpacity
           key={route.key}
           style={styles.button}
-          onPress={() => handleNavigation(index)} // Trigger navigation
+          onPress={() => handleNavigation(index)}
         >
           <MaterialCommunityIcons
             name={route.icon}

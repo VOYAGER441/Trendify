@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary, // Active dot color
   },
   inactiveDot: {
-    backgroundColor: COLORS.secondary, // Inactive dot color
+    backgroundColor: COLORS.tertiary, // Inactive dot color
   },
 });
 
