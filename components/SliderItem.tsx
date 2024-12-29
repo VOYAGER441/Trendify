@@ -8,18 +8,13 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { RelativePathString, router } from "expo-router";
+import { router } from "expo-router";
+import * as Interface from "@/interface";
 
-export type ImageSliderType = {
-  title: string;
-  image: string;
-  category: string;
-  time: string;
-  author: string;
-};
+
 
 type Props = {
-  item: ImageSliderType;
+  item: Interface.INewsResponse;
   index: number;
   scrollX: Animated.SharedValue<number>;
 };
@@ -48,20 +43,21 @@ const SliderItem = ({ item, index, scrollX }: Props) => {
     };
   });
 
-  const handleOnPress = () => {
-    router.push('/news' as RelativePathString,/* {
-      params:{item},
-    } */)
+  const handleOnPress = (newsItem: Interface.INewsResponse) => {
+    router.push({
+      pathname: "/news", // The destination page
+      params: { news: JSON.stringify(newsItem) }, // Pass the data as params
+    });
   };
 
   return (
     <Animated.View style={[styles.itemContainer, animationsStyle]}>
-      <Image source={{ uri: item.image }} style={styles.image} />
+      <Image source={{ uri: item.imageUrl }} style={styles.image} />
       <LinearGradient
         colors={["transparent", "rgba(0,0,0,0.8)"]}
         style={styles.overlay}
       >
-        <TouchableOpacity onPress={handleOnPress}>
+        <TouchableOpacity onPress={() => handleOnPress(item)}>
           <View style={styles.contentContainer}>
             <Text style={styles.category}>Top 10 🔥</Text>
             <View style={styles.categoryContainer}>

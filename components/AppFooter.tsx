@@ -16,7 +16,7 @@ const AppFooter = () => {
   const routes: { key: string; title: string; icon: IconName; path: string }[] = [
     { key: "home", title: "Home", icon: "home", path: "/home" },
     { key: "category", title: "Category", icon: "grid", path: "/category" },
-    { key: "profile", title: "Profile", icon: "human-greeting-variant", path: "/profile" },
+    { key: "profile", title: "Profile", icon: "human-greeting-variant", path: "/user" },
   ];
 
   useEffect(() => {

@@ -12,80 +12,17 @@ import Animated, {
   useAnimatedScrollHandler,
 } from "react-native-reanimated";
 import SliderItem from "./SliderItem";
+import * as Interface from "@/interface"
+import { newsData1 } from "@/mock/mock.data";
 
 const { width } = Dimensions.get("screen");
 
-export const ImageSliderData = [
-  {
-    title: "Breaking News: New Tech Innovations",
-    category: "Technology",
-    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 09:00",
-    author: "John Doe",
-  },
-  {
-    title: "Latest Updates on AI Advancements",
-    category: "AI",
-    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 10:30",
-    author: "Jane Smith",
-  },
-  {
-    title: "Latest Updates on AI Advancements",
-    category: "AI",
-    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 10:30",
-    author: "Jane Smith",
-  },
-  {
-    title: "Latest Updates on AI Advancements",
-    category: "AI",
-    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 10:30",
-    author: "Jane Smith",
-  },
-  {
-    title: "Latest Updates on AI Advancements",
-    category: "AI",
-    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 10:30",
-    author: "Jane Smith",
-  },
-  {
-    title: "Latest Updates on AI Advancements",
-    category: "AI",
-    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 10:30",
-    author: "Jane Smith",
-  },
-  {
-    title: "Latest Updates on AI Advancements",
-    category: "AI",
-    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 10:30",
-    author: "Jane Smith",
-  },
-  {
-    title: "Latest Updates on AI Advancements",
-    category: "AI",
-    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 10:30",
-    author: "Jane Smith",
-  },
-  {
-    title: "Latest Updates on AI Advancements",
-    category: "AI",
-    image: "https://cdn.pixabay.com/photo/2023/01/08/14/22/sample-7705346_640.jpg",
-    time: "2024-12-18 10:30",
-    author: "Jane Smith",
-  },
-  // Add more data items...
-];
+
 
 const AppLatest = () => {
   const scrollX = useSharedValue(0); // SharedValue to track scroll position
   const [currentIndex, setCurrentIndex] = useState(0); // Track the current page index
-  const [data, setData] = useState(ImageSliderData); // Initialize `data` as an array
+  const [data, setData] = useState(newsData1); // Initialize `data` as an array
 
   // Scroll handler for updating the scrollX value
   const scrollHandler = useAnimatedScrollHandler((event) => {
@@ -169,7 +106,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary, // Active dot color
   },
   inactiveDot: {
-    backgroundColor: COLORS.tertiary, // Inactive dot color
+    backgroundColor: COLORS.default, // Inactive dot color
   },
 });
 

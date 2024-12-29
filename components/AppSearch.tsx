@@ -8,6 +8,9 @@ type Props = {};
 const AppSearch = (props: Props) => {
   const [search, setSearch] = useState("");
 
+  // console.log(search);
+  
+
   const updateSearch = (text: string) => {
     setSearch(text);
   };
@@ -15,7 +18,7 @@ const AppSearch = (props: Props) => {
   return (
     <View style={styles.headerContainer}>
       <SearchBar
-        placeholder="Type Here..."
+        placeholder="Search Here..."
         onChangeText={updateSearch}
         value={search}
         containerStyle={styles.searchContainer}

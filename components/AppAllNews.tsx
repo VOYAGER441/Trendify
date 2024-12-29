@@ -3,64 +3,71 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { SIZES, COLORS, FONT } from "@/constants";
-import { RelativePathString, router } from "expo-router";
-
-const newsData = [
-  {
-    id: 1,
-    img: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?crop=entropy&cs=tinysrgb&fit=max&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDd8fG5ld3N8ZW58MHx8fHwxNjg5MjM1NzE5&ixlib=rb-1.2.1&q=80&w=1080",
-    title: "Breaking News: Local Event Happens",
-    description:
-      "A major local event is happening this week in your city. Click to read more about the event happening tomorrow!",
-    date: "Dec 19, 2024",
-  },
-  {
-    id: 2,
-    img: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?crop=entropy&cs=tinysrgb&fit=max&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDd8fG5ld3N8ZW58MHx8fHwxNjg5MjM1NzE5&ixlib=rb-1.2.1&q=80&w=1080",
-    title: "Technology Advances: A New Era",
-    description:
-      "The latest breakthrough in technology is set to change the world. Find out what’s new and how it will affect us.",
-    date: "Dec 18, 2024",
-  },
-  {
-    id: 3,
-    img: "https://images.unsplash.com/photo-1593642532973-d31b6557fa68?crop=entropy&cs=tinysrgb&fit=max&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDd8fG5ld3N8ZW58MHx8fHwxNjg5MjM1NzE5&ixlib=rb-1.2.1&q=80&w=1080",
-    title: "Global News: Earthquake Strikes",
-    description:
-      "A massive earthquake has struck the city. Here are the updates and the current situation on the ground.",
-    date: "Dec 17, 2024",
-  },
-];
-
-
+import { useRouter } from "expo-router";
+import * as Interface from "@/interface";
+import { newsData } from "@/mock/mock.data";
 
 const AllNewsCard = () => {
+  const router = useRouter();
 
-const handleOnPress=()=>{
-  router.push('/news' as RelativePathString)
-}
+  const handleOnPress = (newsItem: Interface.INewsResponse) => {
+    router.push({
+      pathname: "/news", // Destination page
+      params: { news: JSON.stringify(newsItem) }, // Passing the selected news item as params
+    });
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>ALL News &#x27A4;</Text>
-      {newsData.map(({ id, img, title, description, date }) => (
-        <TouchableOpacity key={id} style={styles.card} onPress={handleOnPress}>
-          <Image source={{ uri: img }} style={styles.image} />
-          <LinearGradient
-            colors={["transparent", "rgba(0,0,0,0.8)"]}
-            style={styles.overlay}
+      {newsData.map(
+        ({
+          id,
+          imageUrl,
+          title,
+          description,
+          time,
+          category,
+          author,
+          outerUrl,
+        }) => (
+          <TouchableOpacity
+            key={id}
+            style={styles.card}
+            onPress={() =>
+              handleOnPress({
+                id,
+                imageUrl,
+                title,
+                description,
+                time,
+                category,
+                author,
+                outerUrl,
+              })
+            }
           >
-            <View style={styles.contentContainer}>
-              <Text style={styles.title}>{title}</Text>
-              <Text style={styles.description}>{description}</Text>
-              <View style={styles.footer}>
-                <Text style={styles.date}>{date}</Text>
-                <AntDesign name="doubleright" size={20} color={COLORS.tertiary} />
+            <Image source={{ uri: imageUrl }} style={styles.image} />
+            <LinearGradient
+              colors={["transparent", "rgba(0,0,0,0.8)"]}
+              style={styles.overlay}
+            >
+              <View style={styles.contentContainer}>
+                <Text style={styles.title}>{title}</Text>
+                <Text style={styles.description}>{description}</Text>
+                <View style={styles.footer}>
+                  <Text style={styles.time}>{time}</Text>
+                  <AntDesign
+                    name="doubleright"
+                    size={20}
+                    color={COLORS.tertiary}
+                  />
+                </View>
               </View>
-            </View>
-          </LinearGradient>
-        </TouchableOpacity>
-      ))}
+            </LinearGradient>
+          </TouchableOpacity>
+        )
+      )}
     </View>
   );
 };
@@ -68,7 +75,6 @@ const handleOnPress=()=>{
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    // backgroundColor: COLORS.lightWhite,
   },
   headerText: {
     fontSize: SIZES.xLarge,
@@ -119,7 +125,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  date: {
+  time: {
     fontSize: 12,
     color: COLORS.tertiary,
     fontFamily: FONT.regular,

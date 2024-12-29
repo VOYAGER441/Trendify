@@ -73,7 +73,7 @@ const SlideItem = ({ category }: any) => {
               position: "absolute",
               top: 10,
               left: 10,
-              color: COLORS.tertiary,
+              color: COLORS.default,
               fontSize: 20,
               fontFamily: FONT.bold,
               // fontWeight: "bold",
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     // backgroundColor:COLORS.lightWhite // Ensure SafeAreaView takes up the full height
-    backgroundImage:"#e9ecef"
+    backgroundImage:COLORS.lightWhite
   },
   gradientBackground: {
     flex: 1, // Make sure it fills the screen
