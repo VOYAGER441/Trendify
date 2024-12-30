@@ -19,20 +19,18 @@ const Index = () => {
 
   return (
     <LinearGradient
-    
-    colors={[  "#e64777", "#e377ab", "#d9a0ce", "#d6c4e0", "#e3e3e3"]} // Gradient colors
+      colors={["#e64777", "#e377ab", "#d9a0ce", "#d6c4e0", "#e3e3e3"]} // Gradient colors
       start={{ x: 0, y: 0 }} // Start from bottom-left
       end={{ x: 0, y: 0 }} // End at top-right (creating a "to right top" effect)
-      style={styles.gradientBackground}>
+      style={styles.gradientBackground}
+    >
       <PaperProvider>
         <SafeAreaView style={styles.safeArea}>
           <Stack.Screen
             options={{
               headerTitle: "",
               headerTransparent: true,
-              header: () => (
-               <AppSearch/>
-              ),
+              header: () => <AppSearch />,
             }}
           />
           <View style={styles.mainContainer}>

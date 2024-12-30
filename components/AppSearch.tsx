@@ -1,37 +1,34 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TextInput } from "react-native";
 import React, { useState } from "react";
 import { COLORS } from "@/constants";
-import { SearchBar, Avatar } from "@rneui/themed";
+import { Avatar } from "@rneui/themed";
+import service from "@/service";
+import * as Interface from "@/interface"
+type Props = {
+  setSearchQuery: (query: string) => void;
+};
+const [newsFeed, setNewsFeed] = useState<Interface.INewsResponse[]>([]);
 
-type Props = {};
-
-const AppSearch = (props: Props) => {
+const AppSearch = ({ setSearchQuery }: Props) => {
   const [search, setSearch] = useState("");
 
-  // console.log(search);
-  
-
-  const updateSearch = (text: string) => {
+  const updateSearch = async (text: string) => {
     setSearch(text);
+    setSearchQuery(text);
+
+    const results = await service.apiService.searchByGNews(text);
+    setSearchQuery(text); // Update parent state
+    setNewsFeed(results); // Update global news feed state
   };
 
   return (
     <View style={styles.headerContainer}>
-      <SearchBar
+      <TextInput
+        style={styles.textInput}
         placeholder="Search Here..."
+        placeholderTextColor={COLORS.gray}
         onChangeText={updateSearch}
         value={search}
-        containerStyle={styles.searchContainer}
-        inputContainerStyle={styles.searchInputContainer}
-        inputStyle={{ color: "black" }}
-      />
-      <Avatar
-        rounded
-        title="MD"
-        size={40}
-        containerStyle={styles.avatarContainer}
-        titleStyle={styles.avatarTitle}
-        overlayContainerStyle={styles.avatarOverlay}
       />
     </View>
   );
@@ -40,9 +37,17 @@ const AppSearch = (props: Props) => {
 export default AppSearch;
 
 const styles = StyleSheet.create({
-  searchInputContainer: {
-    backgroundColor: 'white',
+  textInput: {
+    flex: 1,
+    backgroundColor: "white",
     borderRadius: 40,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    color: "black",
+    marginRight: 10,
+    borderWidth: 1,
+    borderColor: COLORS.gray,
   },
   headerContainer: {
     flexDirection: "row",
@@ -50,13 +55,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 8,
-  },
-  searchContainer: {
-    flex: 1,
-    marginRight: 10,
-    backgroundColor: "transparent",
-    borderBottomWidth: 0,
-    borderTopWidth: 0,
   },
   avatarContainer: {
     marginRight: 10,

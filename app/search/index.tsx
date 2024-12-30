@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -14,73 +14,50 @@ import AppFooter from "@/components/AppFooter";
 import AppSearch from "@/components/AppSearch";
 import { COLORS, FONT } from "@/constants";
 import * as Interface from "@/interface";
-import { newsData } from "@/mock/mock.data";
+
+import SearchResultItem from "@/components/SearchResultItem";
+import service from "@/service";
+
 // Search Result Item Component
-const SearchResultItem = ({
-  title,
-  imageUrl,
-  description,
-  outerUrl,
-}: Interface.INewsResponse) => {
-  // Limit description to 10 words
-  const truncatedDescription = description.split(" ").slice(0, 5).join(" ") + (description.split(" ").length > 5 ? "..." : "");
-
-  return (
-    <TouchableOpacity
-      style={styles.resultItemContainer}
-      onPress={() => console.log(`Navigating to: ${outerUrl}`)}
-    >
-      {/* Left side Image */}
-      <Image source={{ uri: imageUrl }} style={styles.resultImage} />
-
-      {/* Right side Content */}
-      <View style={styles.resultContent}>
-        <Text style={styles.resultTitle}>{title}</Text>
-        <Text style={styles.resultDescription}>{truncatedDescription}</Text>
-        <Text style={styles.resultLink}>{outerUrl}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
 
 const Index = () => {
-  
+  const [searchQuery, setSearchQuery] = useState(""); // Search query
+  const [newsFeed, setNewsFeed] = useState<Interface.INewsResponse[]>([]); // News state
+
+  // Fetch filtered news from G-News
+  const fetchNews = async (query: string) => {
+    const results = await service.apiService. searchByGNews(query);
+    setNewsFeed(results);
+  };
+
+  useEffect(() => {
+    if (searchQuery) fetchNews(searchQuery); // Fetch news on query change
+  }, [searchQuery]);
 
   return (
     <PaperProvider>
       <SafeAreaView style={styles.safeArea}>
-        <Stack.Screen
-          options={{
-            headerTitle: "",
-            headerTransparent: true,
-            header: () => <AppSearch />,
-          }}
-        />
+        <Stack.Screen options={{ headerShown: false }} />
+        <AppSearch setSearchQuery={setSearchQuery} />
         <View style={styles.mainContainer}>
-          {/* FlatList for rendering SearchResultItem */}
           <FlatList
-            data={newsData} // Passing the news data to FlatList
+            data={newsFeed}
             renderItem={({ item }) => (
               <SearchResultItem
                 title={item.title}
                 imageUrl={item.imageUrl}
                 description={item.description}
                 outerUrl={item.outerUrl}
-                id={""}
-                category={[]}
-                time={""}
-                author={""}
+                id={item.id}
+                category={item.category}
+                time={item.time}
+                author={item.author}
               />
             )}
-            keyExtractor={(item, index) => `news-${index}`} // Unique key for each item
+            keyExtractor={(item) => item.id}
             contentContainerStyle={styles.scrollContent}
           />
-
-          {/* Footer */}
-          <View style={{ width: "80%", alignSelf: "center", flex: 1 }}>
-            <AppFooter />
-          </View>
+          <AppFooter />
         </View>
       </SafeAreaView>
     </PaperProvider>
@@ -97,12 +74,12 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 80, // Space for the footer
+    paddingBottom: 80,
     paddingHorizontal: 16,
     top: "12%",
   },
   resultItemContainer: {
-    flexDirection: "row", // Layout for image on left and text on right
+    flexDirection: "row",
     backgroundColor: COLORS.white,
     padding: 12,
     borderRadius: 10,
@@ -117,7 +94,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 8,
-    marginRight: 12, // Space between image and text
+    marginRight: 12,
   },
   resultContent: {
     flex: 1,

@@ -1,14 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { SIZES, COLORS, FONT } from "@/constants";
 import { useRouter } from "expo-router";
 import * as Interface from "@/interface";
-import { newsData } from "@/mock/mock.data";
+import service from "@/service";
 
 const AllNewsCard = () => {
   const router = useRouter();
+  const [data, setData] = useState<Interface.INewsResponse[]>([]); // Default to empty array
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fetchedData = await service.apiService.getAllGeneralNewsByTheNewsApi();
+
+        // Check for unique IDs in the fetched data
+        const ids = fetchedData.map((item) => item.id);
+        const uniqueIds = new Set(ids);
+       
+
+        if (fetchedData && Array.isArray(fetchedData)) {
+          setData(fetchedData); // Set the combined data
+        } else {
+          console.warn("Fetched data is invalid or empty.");
+          setData([]); // Fallback to empty array if no valid data
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setData([]); // Fallback to empty array in case of error
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleOnPress = (newsItem: Interface.INewsResponse) => {
     router.push({
@@ -20,8 +45,8 @@ const AllNewsCard = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>ALL News &#x27A4;</Text>
-      {newsData.map(
-        ({
+      {data.length > 0 ? (
+        data.map(({
           id,
           imageUrl,
           title,
@@ -30,43 +55,53 @@ const AllNewsCard = () => {
           category,
           author,
           outerUrl,
-        }) => (
-          <TouchableOpacity
-            key={id}
-            style={styles.card}
-            onPress={() =>
-              handleOnPress({
-                id,
-                imageUrl,
-                title,
-                description,
-                time,
-                category,
-                author,
-                outerUrl,
-              })
-            }
-          >
-            <Image source={{ uri: imageUrl }} style={styles.image} />
-            <LinearGradient
-              colors={["transparent", "rgba(0,0,0,0.8)"]}
-              style={styles.overlay}
+        }, index) => {
+          // If there are duplicates, generate a unique key using index as a fallback
+          const uniqueKey = `${id}-${index}`;
+
+          return (
+            <TouchableOpacity
+              key={uniqueKey} // Use uniqueKey to prevent key duplication
+              style={styles.card}
+              onPress={() =>
+                handleOnPress({
+                  id,
+                  imageUrl,
+                  title,
+                  description,
+                  time,
+                  category,
+                  author,
+                  outerUrl,
+                })
+              }
             >
-              <View style={styles.contentContainer}>
-                <Text style={styles.title}>{title}</Text>
-                <Text style={styles.description}>{description}</Text>
-                <View style={styles.footer}>
-                  <Text style={styles.time}>{time}</Text>
-                  <AntDesign
-                    name="doubleright"
-                    size={20}
-                    color={COLORS.tertiary}
-                  />
+              <Image
+                source={{ uri: imageUrl || "https://via.placeholder.com/200" }} // Ensure fallback if imageUrl is empty or invalid
+                style={styles.image}
+              />
+              <LinearGradient
+                colors={["transparent", "rgba(0,0,0,0.8)"]}
+                style={styles.overlay}
+              >
+                <View style={styles.contentContainer}>
+                  <Text style={styles.title}>{title}</Text>
+                  {/* <Text style={styles.description}>{description}</Text> */}
+                  <View style={styles.footer}>
+                    <Text style={styles.time}>{time}</Text>
+                    <AntDesign
+                      name="doubleright"
+                      size={20}
+                      color={COLORS.tertiary}
+                    />
+                  </View>
                 </View>
-              </View>
-            </LinearGradient>
-          </TouchableOpacity>
-        )
+              </LinearGradient>
+            </TouchableOpacity>
+          );
+        })
+      ) : (
+        <Text>No news available</Text> // Fallback when no data is available
       )}
     </View>
   );
@@ -112,7 +147,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: FONT.bold,
     color: COLORS.tertiary,
-    marginBottom: 8,
+    // marginBottom: 5,
   },
   description: {
     fontSize: 14,
@@ -129,6 +164,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.tertiary,
     fontFamily: FONT.regular,
+    marginTop:10
   },
 });
 

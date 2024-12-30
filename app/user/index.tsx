@@ -1,5 +1,12 @@
 import React from "react";
-import { SafeAreaView, ScrollView, StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import { Avatar } from "@rneui/themed"; // Avatar for profile picture
 import { Stack } from "expo-router";
 import { COLORS, FONT } from "@/constants"; // Assuming you have color and font constants
@@ -54,7 +61,9 @@ const UserProfile = () => {
 
             {/* Followed Categories */}
             <View style={styles.followedCategoriesContainer}>
-              <Text style={styles.followedCategoriesTitle}>Followed Categories:</Text>
+              <Text style={styles.followedCategoriesTitle}>
+                Followed Categories:
+              </Text>
               <View style={styles.categories}>
                 {user.followedCategories.map((category, index) => (
                   <TouchableOpacity key={index} style={styles.categoryButton}>
@@ -95,7 +104,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    top:"2%"
+    top: "2%",
   },
   scrollContent: {
     flexGrow: 1,

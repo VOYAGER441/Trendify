@@ -1,7 +1,5 @@
 import { COLORS, FONT, SIZES } from "@/constants";
 import service from "@/service";
-// import { COLORS, FONT, SIZES } from "@/constants";
-// import service from "@/service";
 import { RelativePathString, router, Stack } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -45,8 +43,6 @@ const index = () => {
   const fetchUserPreferences = async () => {
     try {
       const preferences = await service.AppWrite.getCurrentUserCategory();
-      // console.log("Fetched preferences:", preferences);
-
       if (preferences) {
         setDataBasePreferencesData(preferences);
       }
@@ -66,10 +62,8 @@ const index = () => {
 
   // Submit selected categories to the backend
   const handleSubmit = async () => {
-    // console.log("Selected Categories:", selectedCategories);
     await service.AppWrite.updatePreference(selectedCategories);
     setShowModal(false);
-    // router.push("/home" as RelativePathString);
   };
 
   useEffect(() => {
@@ -82,7 +76,6 @@ const index = () => {
       setShowModal(true);
     } else {
       router.push("/home" as RelativePathString);
-      
     }
   }, [dataBasePreferencesData]);
 
@@ -146,6 +139,14 @@ const index = () => {
                   >
                     <Text style={styles.continueText}>Continue</Text>
                   </TouchableOpacity>
+
+                  {/* Close Modal Button */}
+                  <TouchableOpacity
+                    style={styles.continueButton} // Reuse the button style for consistency
+                    onPress={() => setShowModal(false)}
+                  >
+                    <Text style={styles.continueText}>Close</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </Modal>
@@ -155,7 +156,6 @@ const index = () => {
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -175,14 +175,14 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     textAlign: "center",
     marginBottom: SIZES.medium,
   },
   subText: {
     textAlign: "center",
     color: COLORS.gray,
-    marginBottom:SIZES.large,
+    marginBottom: SIZES.large,
   },
   categoryItem: {
     flex: 1,
@@ -195,16 +195,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   selectedCategory: {
-    backgroundColor: COLORS.primary, // Highlighted color
+    backgroundColor: COLORS.primary,
     borderColor: COLORS.primary,
   },
   categoryText: {
-    fontFamily:FONT.bold,
+    fontFamily: FONT.bold,
     fontSize: 14,
     color: COLORS.primary,
   },
   selectedCategoryText: {
-    color: COLORS.tertiary, // Change text color for selected category
+    color: COLORS.tertiary,
   },
   continueButton: {
     backgroundColor: COLORS.default,
@@ -214,21 +214,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   disabledButton: {
-    backgroundColor:COLORS.gray2,
+    backgroundColor: COLORS.gray2,
   },
   continueText: {
     color: COLORS.tertiary,
     fontSize: 16,
     fontWeight: "bold",
   },
-
-  icon: {
-    position: "absolute", // Make it position-relative to the container
-    right: 10, // Adjust the distance from the right edge
-    top: "50%", // Vertically center it within the container
-    transform: [{ translateY: -12 }], // Offset for proper centering
-  },
-
   backgroundImage: {
     flex: 1,
     justifyContent: "center",
@@ -236,46 +228,11 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-
   container: {
     flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-  },
-
-  agreementText: {
-    textAlign: "center",
-    fontSize: SIZES.small,
-    color: COLORS.default,
-    marginBottom: 20,
-  },
-  linkText: {
-    color: COLORS.secondary,
-    textDecorationLine: "underline",
-  },
-  tabContainer: {
-    flexDirection: "row",
-    marginBottom: 20,
-  },
-  tabText: {
-    fontSize: SIZES.medium,
-    color: COLORS.default,
-    marginHorizontal: 10,
-  },
-  activeTabText: {
-    color: COLORS.secondary,
-    borderBottomWidth: 2,
-    borderBottomColor: COLORS.secondary,
-  },
-  input: {
-    borderWidth: 1,
-    // borderColor: COLORS.default,
-    borderRadius: 40,
-    padding: 10,
-    width: "100%",
-    marginBottom: 10,
-    color: "black",
   },
 });
 

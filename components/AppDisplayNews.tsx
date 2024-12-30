@@ -82,13 +82,13 @@ const styles = StyleSheet.create({
   },
   image: {
     width: SCREEN_WIDTH - 30,
-    height: 250, // Cover half the screen height
+    height: 350, // Cover half the screen height
     borderRadius: 20,
   },
   overlay: {
     position: "absolute",
     width: SCREEN_WIDTH - 30,
-    height: 250,
+    height: 350,
     borderRadius: 20,
     padding: 16,
     justifyContent: "flex-end",
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   descriptionBox: {
     width: SCREEN_WIDTH - 30,
     padding: 10,
-    borderRadius: 20,
+    borderRadius: 10,
     backgroundColor: "#f8f9fa",
     alignSelf: "center",
   },

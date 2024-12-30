@@ -1,66 +1,61 @@
 import { COLORS, FONT, SIZES } from "@/constants";
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
-import { FlatList } from "react-native-gesture-handler";
-import Animated, {
-  useSharedValue,
-  useAnimatedScrollHandler,
-} from "react-native-reanimated";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
+import Animated, { useSharedValue, useAnimatedScrollHandler } from "react-native-reanimated";
 import SliderItem from "./SliderItem";
-import * as Interface from "@/interface"
-import { newsData1 } from "@/mock/mock.data";
+import * as Interface from "@/interface";
+import service from "@/service";
 
 const { width } = Dimensions.get("screen");
 
-
-
 const AppLatest = () => {
-  const scrollX = useSharedValue(0); // SharedValue to track scroll position
-  const [currentIndex, setCurrentIndex] = useState(0); // Track the current page index
-  const [data, setData] = useState(newsData1); // Initialize `data` as an array
+  const scrollX = useSharedValue(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [data, setData] = useState<Interface.INewsResponse[]>();
 
-  // Scroll handler for updating the scrollX value
   const scrollHandler = useAnimatedScrollHandler((event) => {
     scrollX.value = event.contentOffset.x;
   });
 
-  // Handler to track visible items and update the current index
   const onViewableItemsChanged = React.useRef(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
       setCurrentIndex(viewableItems[0].index);
     }
   }).current;
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fetchedData = await service.apiService.latestNewsCollectionByNewsData();
+        setData(fetchedData); // Update state
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Latest News &#x27A4;</Text>
 
-      {/* Image Slider */}
       <Animated.FlatList
-        data={data}
+       data={data}
         renderItem={({ item, index }) => (
           <SliderItem item={item} index={index} scrollX={scrollX} />
         )}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item, index) => `${item.id}-${index}`}
         horizontal
         showsHorizontalScrollIndicator={false}
         pagingEnabled
-        onScroll={scrollHandler} // Attach scroll handler
+        onScroll={scrollHandler}
         scrollEventThrottle={16}
-        // onEndReached={() => setData((prevData) => [...prevData, ...ImageSliderData])} // Append new data
-        // onEndReachedThreshold={0.5}
-        onViewableItemsChanged={onViewableItemsChanged} // Track visible items
+        onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={{ viewAreaCoveragePercentThreshold: 50 }}
       />
 
-      {/* Pagination Dots */}
       <View style={styles.pagination}>
-        {data.map((_, index) => (
+        {data?.map((_, index) => (
           <View
             key={index}
             style={[
@@ -73,7 +68,6 @@ const AppLatest = () => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     position: "relative",

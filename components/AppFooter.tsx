@@ -13,15 +13,23 @@ const AppFooter = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   // Define routes with strict typing for the icon property
-  const routes: { key: string; title: string; icon: IconName; path: string }[] = [
-    { key: "home", title: "Home", icon: "home", path: "/home" },
-    { key: "category", title: "Category", icon: "grid", path: "/category" },
-    { key: "profile", title: "Profile", icon: "human-greeting-variant", path: "/user" },
-  ];
+  const routes: { key: string; title: string; icon: IconName; path: string }[] =
+    [
+      { key: "home", title: "Home", icon: "home", path: "/home" },
+      { key: "category", title: "Category", icon: "grid", path: "/category" },
+      {
+        key: "profile",
+        title: "Profile",
+        icon: "human-greeting-variant",
+        path: "/user",
+      },
+    ];
 
   useEffect(() => {
     // Update the selectedIndex based on the current route
-    const currentRouteIndex = routes.findIndex((route) => route.path === pathname);
+    const currentRouteIndex = routes.findIndex(
+      (route) => route.path === pathname
+    );
     if (currentRouteIndex !== -1) {
       setSelectedIndex(currentRouteIndex);
     }

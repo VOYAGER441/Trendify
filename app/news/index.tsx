@@ -13,13 +13,13 @@ import AppFooter from "@/components/AppFooter";
 import AppSearch from "@/components/AppSearch";
 import { COLORS } from "@/constants";
 import * as Interface from "@/interface";
-import { newsData,newsData1 } from "@/mock/mock.data";
+import { newsData, newsData1 } from "@/mock/mock.data";
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
 const Index = () => {
   // Access params using useLocalSearchParams
   const { news } = useLocalSearchParams();
-  
+
   // Parse the news data
   const newsItem = news ? JSON.parse(news as string) : null;
 
@@ -31,7 +31,9 @@ const Index = () => {
     );
   }
 
-  const renderNewsItem = ({ item }: { item: Interface.INewsResponse }) => <AppDisplayNews item={item} />;
+  const renderNewsItem = ({ item }: { item: Interface.INewsResponse }) => (
+    <AppDisplayNews item={item} />
+  );
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -46,16 +48,19 @@ const Index = () => {
 
       {/* Main Content */}
       <FlatList
-  data={[...newsItem ? [{ ...newsItem, id: `newsItem-${newsItem.id}` }] : [], ...newsData,...newsData1]}
-  renderItem={renderNewsItem}
-  keyExtractor={(item, index) => `${item.id}-${index}`}
-  pagingEnabled
-  showsVerticalScrollIndicator={false}
-  style={styles.flatList}
-  snapToAlignment="center"
-  decelerationRate="fast"
-/>
-
+        data={[
+          ...(newsItem ? [{ ...newsItem, id: `newsItem-${newsItem.id}` }] : []),
+          ...newsData,
+          ...newsData1,
+        ]}
+        renderItem={renderNewsItem}
+        keyExtractor={(item, index) => `${item.id}-${index}`}
+        pagingEnabled
+        showsVerticalScrollIndicator={false}
+        style={styles.flatList}
+        snapToAlignment="center"
+        decelerationRate="fast"
+      />
 
       {/* Footer */}
       <View style={{ width: "80%", alignSelf: "center", flex: 1 }}>
