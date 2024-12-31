@@ -14,7 +14,7 @@ export const apiObject = {
     CURRENTS_API: "gM3CsK7k5kndOJ5UubruxIN0_4_ZtmuCAUKKQIPGWF1doYDI",
   
     // News API base URLs
-    NEWS_API_URL: "https://example.com/news-api",
+    NEWS_API_URL: "https://newsapi.org/v2/",
     G_NEWS_API_URL: "https://gnews.io/api/v4/",
     MARKET_API_URL: "https://example.com/market-api",
     NEWS_DATA_URL: "https://newsdata.io/api/1/",

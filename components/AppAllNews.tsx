@@ -7,6 +7,23 @@ import { useRouter } from "expo-router";
 import * as Interface from "@/interface";
 import service from "@/service";
 
+const SkeletonLoader = () => {
+  return (
+    <View style={styles.skeletonContainer}>
+      {Array(3)
+        .fill("")
+        .map((_, index) => (
+          <View key={index} style={styles.skeletonCard}>
+            <View style={styles.skeletonImage} />
+            <View style={styles.skeletonText} />
+            <View style={styles.skeletonFooter} />
+          </View>
+        ))}
+    </View>
+  );
+};
+
+
 const AllNewsCard = () => {
   const router = useRouter();
   const [data, setData] = useState<Interface.INewsResponse[]>([]); // Default to empty array
@@ -100,8 +117,8 @@ const AllNewsCard = () => {
             </TouchableOpacity>
           );
         })
-      ) : (
-        <Text>No news available</Text> // Fallback when no data is available
+      )  : (
+        <SkeletonLoader /> // Display skeleton loader when no data is available
       )}
     </View>
   );
@@ -166,6 +183,34 @@ const styles = StyleSheet.create({
     fontFamily: FONT.regular,
     marginTop:10
   },
+   // Skeleton styles
+   skeletonContainer: { marginTop: 20 },
+   skeletonCard: {
+     marginBottom: 15,
+     borderRadius: 10,
+     backgroundColor: COLORS.lightWhite,
+     overflow: "hidden",
+   },
+   skeletonImage: {
+     width: "100%",
+     height: 150,
+     backgroundColor: COLORS.gray,
+   },
+   skeletonText: {
+     height: 20,
+     marginTop: 10,
+     marginHorizontal: 10,
+     backgroundColor: COLORS.gray,
+     borderRadius: 5,
+   },
+   skeletonFooter: {
+     height: 15,
+     marginTop: 10,
+     marginHorizontal: 10,
+     backgroundColor: COLORS.gray,
+     borderRadius: 5,
+     marginBottom: 10,
+   },
 });
 
 export default AllNewsCard;

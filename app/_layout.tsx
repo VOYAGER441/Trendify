@@ -31,6 +31,7 @@ const Layout = () => {
     <GlobalProvider>
       <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
         <Stack />
+        
       </View>
       
     </GlobalProvider>

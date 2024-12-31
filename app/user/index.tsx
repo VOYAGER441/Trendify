@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -12,21 +12,48 @@ import { Stack } from "expo-router";
 import { COLORS, FONT } from "@/constants"; // Assuming you have color and font constants
 import { Provider as PaperProvider } from "react-native-paper";
 import AppFooter from "@/components/AppFooter"; // Assuming you have a footer component
+import service from "@/service";
+import * as Interface from "@/interface"
 
 const UserProfile = () => {
   // Example user data for a news app
+  const [data, setData] = useState<Interface.IUserDocument | null>(null);  // Initialize with null
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result2 = await service.AppWrite.fetchUserData(); // Fetch user data from Appwrite
+  
+        // console.log("result2", result2);
+  
+        if (result2 && result2.length > 0) {
+          const userData = result2[0] as unknown as Interface.IUserDocument; // Type assertion
+          setData(userData); // Set the state with the correct type
+        } else {
+          console.error("No user data found");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
   const user = {
-    name: "Jane Doe",
-    email: "jane.doe@example.com",
+    name: data?.username || "Jane Doe", // Optional chaining to avoid undefined errors
+    email: data?.email || "jane.doe@example.com",
     bio: "News enthusiast, technology lover, and a frequent reader of global news updates. Passionate about staying informed.",
-    imageUrl: "https://example.com/path/to/profile-image.jpg",
-    followedCategories: ["Technology", "Health", "Business", "Sports"],
+    imageUrl: data?.avatar || "https://example.com/path/to/profile-image.jpg",
+    followedCategories: data?.preferences || ["Technology", "Health", "Business", "Sports"],
     recentArticles: [
       { title: "Tech Innovations in 2024", time: "2 hours ago" },
       { title: "Global Health Trends", time: "1 day ago" },
       { title: "Stock Market Insights", time: "3 days ago" },
     ],
   };
+  
+
 
   return (
     <PaperProvider>

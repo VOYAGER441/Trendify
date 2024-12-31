@@ -53,11 +53,13 @@ const AppDisplayNews = ({ item }: Props) => {
 
       {/* Description */}
       <View style={styles.descriptionBox}>
-      <Text style={styles.descriptionText}>
-        {item.description.split(" ").slice(0, wordLimit).join(" ")}
-        {item.description.split(" ").length > wordLimit ? "..." : ""}
-      </Text>
-    </View>
+        <Text style={styles.descriptionText}>
+          {item.description
+            ? item.description.split(" ").slice(0, wordLimit).join(" ") +
+              (item.description.split(" ").length > wordLimit ? "..." : "")
+            : "No description available"}
+        </Text>
+      </View>
 
       {/* More Details Button */}
       <TouchableOpacity style={styles.moreContent}>
@@ -78,7 +80,7 @@ const styles = StyleSheet.create({
     height: SCREEN_HEIGHT, // Fullscreen height for each news item
     // justifyContent: "center",
     alignItems: "center",
-    top: "12%",
+    top: "10%",
   },
   image: {
     width: SCREEN_WIDTH - 30,

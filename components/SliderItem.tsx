@@ -11,7 +11,35 @@ import Animated, {
 import { router } from "expo-router";
 import * as Interface from "@/interface";
 
+const SkeletonLoader = () => {
+  const skeletonArray = Array.from({ length: 5 }); // Number of skeleton items to display
 
+  return (
+    <View>
+      {skeletonArray.map((_, index) => (
+        <View key={index} style={styles.skeletonItemContainer}>
+          <View style={styles.skeletonImage} />
+          <LinearGradient
+            colors={["transparent", "rgba(0,0,0,0.8)"]}
+            style={styles.skeletonOverlay}
+          >
+            <View style={styles.skeletonContentContainer}>
+              <View style={styles.skeletonCategory} />
+              <View style={styles.skeletonCategoryContainer}>
+                <View style={styles.skeletonCategory} />
+              </View>
+              <View style={styles.skeletonTitle} />
+              <View style={styles.skeletonFooter}>
+                <View style={styles.skeletonAuthor} />
+                <View style={styles.skeletonTime} />
+              </View>
+            </View>
+          </LinearGradient>
+        </View>
+      ))}
+    </View>
+  );
+};
 
 type Props = {
   item: Interface.INewsResponse;
@@ -98,7 +126,6 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   categoryContainer: {
-    // flex:1,
     alignSelf: "flex-start",
     backgroundColor: COLORS.primary,
     borderRadius: 20,
@@ -130,6 +157,69 @@ const styles = StyleSheet.create({
     color: COLORS.tertiary,
     fontFamily: FONT.regular,
     fontSize: 12,
+  },
+
+  // Skeleton loader styles
+  skeletonItemContainer: {
+    marginBottom: 16,
+    borderRadius: 20,
+    overflow: "hidden",
+    backgroundColor: COLORS.lightWhite,
+  },
+  skeletonImage: {
+    width: "100%",
+    height: 200,
+    backgroundColor: COLORS.gray,
+  },
+  skeletonOverlay: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: "40%",
+    padding: 16,
+    justifyContent: "flex-end",
+  },
+  skeletonContentContainer: {
+    justifyContent: "flex-end",
+  },
+  skeletonCategory: {
+    height: 14,
+    width: 80,
+    backgroundColor: COLORS.gray,
+    borderRadius: 5,
+    marginBottom: 8,
+  },
+  skeletonCategoryContainer: {
+    height: 14,
+    width: 60,
+    backgroundColor: COLORS.gray,
+    borderRadius: 5,
+    marginBottom: 8,
+  },
+  skeletonTitle: {
+    height: 20,
+    width: "70%",
+    backgroundColor: COLORS.gray,
+    borderRadius: 5,
+    marginBottom: 12,
+  },
+  skeletonFooter: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  skeletonAuthor: {
+    height: 14,
+    width: 100,
+    backgroundColor: COLORS.gray,
+    borderRadius: 5,
+  },
+  skeletonTime: {
+    height: 14,
+    width: 50,
+    backgroundColor: COLORS.gray,
+    borderRadius: 5,
   },
 });
 

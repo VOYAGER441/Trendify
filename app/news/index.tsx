@@ -14,6 +14,7 @@ import AppSearch from "@/components/AppSearch";
 import { COLORS } from "@/constants";
 import * as Interface from "@/interface";
 import { newsData, newsData1 } from "@/mock/mock.data";
+import { GLOBAL_FEED_NEWS } from "@/service/api.service";
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
 const Index = () => {
@@ -50,8 +51,7 @@ const Index = () => {
       <FlatList
         data={[
           ...(newsItem ? [{ ...newsItem, id: `newsItem-${newsItem.id}` }] : []),
-          ...newsData,
-          ...newsData1,
+         ...GLOBAL_FEED_NEWS
         ]}
         renderItem={renderNewsItem}
         keyExtractor={(item, index) => `${item.id}-${index}`}

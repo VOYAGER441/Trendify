@@ -1,63 +1,47 @@
-import React, { useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
-import { Stack } from "expo-router";
-import { Provider as PaperProvider } from "react-native-paper";
-import AppFooter from "@/components/AppFooter";
+import React, { useState, useEffect } from "react";
+import { SafeAreaView, StyleSheet, FlatList, View, Text } from "react-native";
+import { PaperProvider } from "react-native-paper";
 import AppSearch from "@/components/AppSearch";
-import { COLORS, FONT } from "@/constants";
-import * as Interface from "@/interface";
-
-import SearchResultItem from "@/components/SearchResultItem";
 import service from "@/service";
-
-// Search Result Item Component
+import * as Interface from "@/interface";
+import { Stack } from "expo-router";
 
 const Index = () => {
-  const [searchQuery, setSearchQuery] = useState(""); // Search query
-  const [newsFeed, setNewsFeed] = useState<Interface.INewsResponse[]>([]); // News state
+  const [searchQuery, setSearchQuery] = useState<string>(""); // State for search query
+  const [newsFeed, setNewsFeed] = useState<Interface.INewsResponse[]>([]); // State for news data
 
-  // Fetch filtered news from G-News
+  // Fetch filtered news based on search query
   const fetchNews = async (query: string) => {
-    const results = await service.apiService. searchByGNews(query);
+    const results = await service.apiService.searchByGNews(query);
     setNewsFeed(results);
   };
 
   useEffect(() => {
-    if (searchQuery) fetchNews(searchQuery); // Fetch news on query change
+    if (searchQuery) {
+      fetchNews(searchQuery); // Fetch news when search query changes
+    }
   }, [searchQuery]);
 
   return (
     <PaperProvider>
       <SafeAreaView style={styles.safeArea}>
-        <Stack.Screen options={{ headerShown: false }} />
-        <AppSearch setSearchQuery={setSearchQuery} />
+        <Stack.Screen
+          options={{
+            headerTitle: "",
+            headerTransparent: true,
+            header: () => <AppSearch />,
+          }}
+        />{" "}
+        {/* Pass setSearchQuery here */}
         <View style={styles.mainContainer}>
+          {/* Render news feed based on search results */}
           <FlatList
             data={newsFeed}
             renderItem={({ item }) => (
-              <SearchResultItem
-                title={item.title}
-                imageUrl={item.imageUrl}
-                description={item.description}
-                outerUrl={item.outerUrl}
-                id={item.id}
-                category={item.category}
-                time={item.time}
-                author={item.author}
-              />
+              <Text key={item.id}>{item.title}</Text> // Render news titles
             )}
             keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.scrollContent}
           />
-          <AppFooter />
         </View>
       </SafeAreaView>
     </PaperProvider>
@@ -65,58 +49,8 @@ const Index = () => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: COLORS.lightWhite,
-  },
-  mainContainer: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 80,
-    paddingHorizontal: 16,
-    top: "12%",
-  },
-  resultItemContainer: {
-    flexDirection: "row",
-    backgroundColor: COLORS.white,
-    padding: 12,
-    borderRadius: 10,
-    marginBottom: 12,
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-  },
-  resultImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 8,
-    marginRight: 12,
-  },
-  resultContent: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  resultTitle: {
-    fontFamily: FONT.bold,
-    fontSize: 16,
-    color: COLORS.primary,
-    marginBottom: 6,
-  },
-  resultDescription: {
-    fontFamily: FONT.regular,
-    fontSize: 14,
-    color: COLORS.default,
-    marginBottom: 6,
-  },
-  resultLink: {
-    fontFamily: FONT.regular,
-    fontSize: 12,
-    color: COLORS.secondary,
-  },
+  safeArea: { flex: 1 },
+  mainContainer: { flex: 1, padding: 16 },
 });
 
 export default Index;

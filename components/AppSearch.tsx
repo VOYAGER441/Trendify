@@ -1,24 +1,36 @@
-import { StyleSheet, Text, View, TextInput } from "react-native";
 import React, { useState } from "react";
-import { COLORS } from "@/constants";
-import { Avatar } from "@rneui/themed";
+import {
+  StyleSheet,
+  TextInput,
+  View,
+  TouchableOpacity,
+} from "react-native";
+import { RelativePathString, useRouter } from "expo-router";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import service from "@/service";
-import * as Interface from "@/interface"
-type Props = {
-  setSearchQuery: (query: string) => void;
-};
-const [newsFeed, setNewsFeed] = useState<Interface.INewsResponse[]>([]);
+import { COLORS } from "@/constants";
 
-const AppSearch = ({ setSearchQuery }: Props) => {
+const AppSearch = () => {
   const [search, setSearch] = useState("");
+  const router = useRouter(); // Router for navigation
 
-  const updateSearch = async (text: string) => {
-    setSearch(text);
-    setSearchQuery(text);
+  const handleSearch = async () => {
+    try {
+      const trimmedSearch = search.trim();
+      if (!trimmedSearch) return; // Prevent empty search
+      console.log("Search triggered with:", trimmedSearch);
 
-    const results = await service.apiService.searchByGNews(text);
-    setSearchQuery(text); // Update parent state
-    setNewsFeed(results); // Update global news feed state
+      // Fetch search results
+      const results = await service.apiService.searchByGNews(trimmedSearch);
+
+      // Navigate to search results screen with query and results
+      router.push({
+        pathname: "/searchResults" as RelativePathString,
+        params: { query: trimmedSearch, results: JSON.stringify(results) }, // Stringify results for safe navigation
+      });
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
   };
 
   return (
@@ -27,45 +39,36 @@ const AppSearch = ({ setSearchQuery }: Props) => {
         style={styles.textInput}
         placeholder="Search Here..."
         placeholderTextColor={COLORS.gray}
-        onChangeText={updateSearch}
+        onChangeText={setSearch}
         value={search}
       />
+      <TouchableOpacity style={styles.iconButton} onPress={handleSearch}>
+        <MaterialCommunityIcons
+          name="magnify"
+          size={24}
+          color={COLORS.white}
+        />
+      </TouchableOpacity>
     </View>
   );
 };
 
-export default AppSearch;
-
 const styles = StyleSheet.create({
+  headerContainer: { flexDirection: "row", alignItems: "center", padding: 10, },
   textInput: {
     flex: 1,
-    backgroundColor: "white",
-    borderRadius: 40,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    fontSize: 16,
-    color: "black",
-    marginRight: 10,
     borderWidth: 1,
     borderColor: COLORS.gray,
+    borderRadius: 20,
+    padding: 8,
   },
-  headerContainer: {
-    flexDirection: "row",
+  iconButton: {
+    backgroundColor: COLORS.primary,
+    padding: 10,
+    borderRadius: 20,
+    justifyContent: "center",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-  },
-  avatarContainer: {
-    marginRight: 10,
-    backgroundColor: COLORS.gray,
-    padding: 2,
-  },
-  avatarTitle: {
-    color: COLORS.primary,
-    fontWeight: "bold",
-  },
-  avatarOverlay: {
-    backgroundColor: COLORS.lightWhite,
   },
 });
+
+export default AppSearch;

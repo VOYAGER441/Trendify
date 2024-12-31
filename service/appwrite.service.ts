@@ -6,6 +6,7 @@ import {
   ID,
   Query,
 } from "react-native-appwrite";
+import * as Interface from "@/interface";
 
 export const appWriteConfig = {
   ENDPOINT: "https://cloud.appwrite.io/v1",
@@ -14,6 +15,9 @@ export const appWriteConfig = {
   DATABASEID: "675afc1600013a7f2084",
   USERCOLLECTIONID: "675affe7000a255e8a7f",
 };
+
+// global array
+export const USER_DATA: Interface.IUserDocument[] = [];
 
 let client: Client;
 // let account: Account;
@@ -178,5 +182,30 @@ export async function getCurrentUserCategory() {
   } catch (error) {
     console.error("Error fetching current user: ", error);
     return null;
+  }
+}
+export async function fetchUserData() {
+  try {
+    const currentAccount = await account.get();
+    if (!currentAccount) throw new Error("No current account found");
+
+    // Log the account ID being queried
+    console.log("Account ID being queried:", currentAccount.$id);
+
+    // Fetch all documents for the account ID
+    const currentUser = await database.listDocuments(
+      appWriteConfig.DATABASEID,
+      appWriteConfig.USERCOLLECTIONID,
+      [Query.equal("accountid", currentAccount.$id)]
+    );
+
+    // console.log("Documents fetched:", currentUser.documents);
+    // USER_DATA.push(createUser.documents)
+
+    if (currentUser.documents.length === 0) throw new Error("User not found");
+
+    return currentUser.documents;
+  } catch (error) {
+    console.error("Error fetching all user data: ", error);
   }
 }
