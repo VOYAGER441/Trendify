@@ -22,7 +22,7 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result2 = await service.AppWrite.fetchUserData(); // Fetch user data from Appwrite
+        const result2 = await service.appWrite.fetchUserData(); // Fetch user data from Appwrite
   
         // console.log("result2", result2);
   
@@ -38,7 +38,7 @@ const UserProfile = () => {
     };
   
     fetchData();
-  }, []);
+  }, [setData]);
   
   const user = {
     name: data?.username || "Jane Doe", // Optional chaining to avoid undefined errors

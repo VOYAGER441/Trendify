@@ -40,13 +40,13 @@ const Home = () => {
     }
 
     try {
-      const response = await service.AppWrite.login(
+      const response = await service.appWrite.login(
         email,
         password,
        
       );
   
-      const result = await service.AppWrite.getCurrentUser();
+      const result = await service.appWrite.getCurrentUser();
       setUser(result);
       setIsLogged(true);
 
@@ -89,7 +89,7 @@ const Home = () => {
     let preferences = null;
   
     try {
-      const response = await service.AppWrite.createUser(
+      const response = await service.appWrite.createUser(
         email,
         password,
         username,

@@ -1,6 +1,6 @@
-import * as AppWrite from './appwrite.service';
+import * as appWrite from './appwrite.service';
 import apiService from './api.service';
 export default{
-    AppWrite,
+    appWrite,
     apiService
 }

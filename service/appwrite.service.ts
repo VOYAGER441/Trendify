@@ -8,6 +8,7 @@ import {
 } from "react-native-appwrite";
 import * as Interface from "@/interface";
 
+
 export const appWriteConfig = {
   ENDPOINT: "https://cloud.appwrite.io/v1",
   platform: "com.voyager.trendify",
@@ -184,6 +185,7 @@ export async function getCurrentUserCategory() {
     return null;
   }
 }
+
 export async function fetchUserData() {
   try {
     const currentAccount = await account.get();

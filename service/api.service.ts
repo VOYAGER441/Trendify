@@ -1,6 +1,8 @@
 import { apiObject } from "@/constants";
 import * as Interface from "@/interface";
 import axios from "axios";
+import service from ".";
+import { getCurrentUserCategory } from "./appwrite.service";
 
 // global variable
 export const GLOBAL_FEED_NEWS: Interface.INewsResponse[] = [];
@@ -191,7 +193,7 @@ async function searchByGNews(searchValue: string) {
 async function categorySearch(categoryValue: string) {
   try {
     const response = await axios.get(
-      `${apiObject.NEWS_API_URL}/everything?q=${categoryValue}&language=en&apiKey=${apiObject.NEWS_API}`
+      `${apiObject.NEWS_API_URL}/everything?q=${categoryValue}&language=en&pageSize=20&apiKey=${apiObject.NEWS_API}`
     );
 
     // Access the articles directly from response.data.articles
@@ -256,9 +258,51 @@ async function categorySearch(categoryValue: string) {
   }
 }
 
+// get user selected news
+
+async function fetchAndStoreCategoryNews() {
+  console.log('enter the user selected news category');
+  
+  try {
+    // Step 1: Get the current user's selected category
+    const selectedCategories = await getCurrentUserCategory();
+    if (!selectedCategories || selectedCategories.length === 0) {
+      console.error("No categories found for the current user.");
+      return;
+    }
+
+    // Step 2: Fetch news for each selected category
+    for (const category of selectedCategories) {
+      const newsData = await categorySearch(category); // Use the categorySearch function
+      if (newsData.length > 0) {
+        // Step 3: Store fetched news into global arrays
+        newsData.forEach((news) => {
+          CATEGORY_NEWS_FEED.push(news); // Store in category-specific feed
+          GLOBAL_FEED_NEWS.push(news); // Store in global feed
+        });
+      }
+    }
+
+    // Step 4: Remove duplicates from GLOBAL_FEED_NEWS
+    const uniqueGlobalFeed = GLOBAL_FEED_NEWS.filter(
+      (value, index, self) =>
+        self.findIndex((news) => news.id === value.id) === index
+    );
+    GLOBAL_FEED_NEWS.length = 0; // Clear the existing array
+    GLOBAL_FEED_NEWS.push(...uniqueGlobalFeed); // Add back the unique news
+
+    console.log("Category news stored successfully!");
+  } catch (error) {
+    console.error("Error fetching and storing category news:", error);
+  }
+}
+
+fetchAndStoreCategoryNews();
+
 export default {
   latestNewsCollectionByNewsData,
   getAllGeneralNewsByTheNewsApi,
   searchByGNews,
   categorySearch,
+  fetchAndStoreCategoryNews,
 };

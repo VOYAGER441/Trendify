@@ -42,7 +42,7 @@ const index = () => {
   // Fetch user preferences
   const fetchUserPreferences = async () => {
     try {
-      const preferences = await service.AppWrite.getCurrentUserCategory();
+      const preferences = await service.appWrite.getCurrentUserCategory();
       if (preferences) {
         setDataBasePreferencesData(preferences);
       }
@@ -62,7 +62,7 @@ const index = () => {
 
   // Submit selected categories to the backend
   const handleSubmit = async () => {
-    await service.AppWrite.updatePreference(selectedCategories);
+    await service.appWrite.updatePreference(selectedCategories);
     setShowModal(false);
   };
 

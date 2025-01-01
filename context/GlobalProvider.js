@@ -12,7 +12,7 @@ const GlobalProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    service.AppWrite.getCurrentUser()
+    service.appWrite.getCurrentUser()
       .then((res) => {
         if (res) {
           setIsLogged(true);
