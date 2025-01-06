@@ -21,7 +21,7 @@
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package":"com.voyager.trendify"
+      "package": "com.voyager.trendify"
     },
     "web": {
       "bundler": "metro",
@@ -33,6 +33,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "16aa1610-4a16-4c6a-a3b4-151e7964f027"
+      }
     }
   }
 }

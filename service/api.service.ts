@@ -176,14 +176,14 @@ async function searchByGNews(searchValue: string) {
       GLOBAL_FEED_NEWS.push(news);
     });
 
-    // Combine all three arrays into one (without duplicates)
-    const allNewsCombined = [...SEARCH_NEWS_FEED, ...GLOBAL_FEED_NEWS].filter(
-      (value, index, self) => {
-        // Filter out duplicates based on the 'id' (or 'uuid') of the news item
-        return self.findIndex((news) => news.id === value.id) === index;
-      }
-    );
-    return allNewsCombined;
+    // // Combine all three arrays into one (without duplicates)
+    // const allNewsCombined = [...SEARCH_NEWS_FEED, ...GLOBAL_FEED_NEWS].filter(
+    //   (value, index, self) => {
+    //     // Filter out duplicates based on the 'id' (or 'uuid') of the news item
+    //     return self.findIndex((news) => news.id === value.id) === index;
+    //   }
+    // );
+    return SEARCH_NEWS_FEED;
   } catch (error) {
     console.error("Error fetching news data:", error);
     return []; // Return an empty array if there's an error
@@ -245,13 +245,13 @@ async function categorySearch(categoryValue: string) {
     });
 
     // Combine all three arrays into one (without duplicates)
-    const allNewsCombined = [...CATEGORY_NEWS_FEED, ...GLOBAL_FEED_NEWS].filter(
-      (value, index, self) => {
-        return self.findIndex((news) => news.id === value.id) === index; // Filter out duplicates based on 'id'
-      }
-    );
+    // const allNewsCombined = [...CATEGORY_NEWS_FEED, ...GLOBAL_FEED_NEWS].filter(
+    //   (value, index, self) => {
+    //     return self.findIndex((news) => news.id === value.id) === index; // Filter out duplicates based on 'id'
+    //   }
+    // );
 
-    return allNewsCombined;
+    return CATEGORY_NEWS_FEED;
   } catch (error) {
     console.error("Error fetching news data:", error);
     return []; // Return an empty array in case of an error
