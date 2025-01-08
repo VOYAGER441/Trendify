@@ -28,7 +28,7 @@ const Index = () => {
         <FlatList
           data={parsedResults}
           renderItem={({ item }) => <SearchResultItem {...item} />}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => `${item.id}-${index}`}
         />
       ) : (
         <Text style={styles.noResults}>No results found.</Text>

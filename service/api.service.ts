@@ -228,7 +228,7 @@ async function categorySearch(categoryValue: string) {
     const mappedData: Interface.INewsResponse[] = newsItems.map(
       (item: any) => ({
         id: item.title, // Using 'title' as the unique identifier
-        imageUrl: item.urlToImage || "https://via.placeholder.com/150", // Fallback if image URL is not available
+        imageUrl: item.urlToImage || "https://images.unsplash.com/photo-1719937050792-a6a15d899281?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Fallback if image URL is not available
         category: [], // 'categories' field doesn't exist in the response, so it can be empty
         title: item.title,
         time: convertToIST(item.publishedAt), // Convert and format time to IST

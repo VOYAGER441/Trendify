@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { StyleSheet, View, Text, Image, Dimensions, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, Image, Dimensions, TouchableOpacity, ActivityIndicator } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { interpolate } from "react-native-reanimated";
 import { RelativePathString, router, useRouter } from "expo-router";
@@ -13,39 +13,44 @@ const window = {
   width: SCREEN_WIDTH,
   height: 740,
 };
+const SlideItem = ({ category }: any) => {
+  const [loading, setLoading] = useState(false); // Loading state
+  const router = useRouter();
 
-const SlideItem = ({ category }:any) => {
+  const handleOnPress = async (categoryName: string) => {
+    try {
+      if (!categoryName) return; // Prevent empty search
+      setLoading(true); // Show loading indicator
+      console.log("Search triggered with:", categoryName);
 
-    const [search, setSearch] = useState("");
-      const router = useRouter();
+      // Fetch search results
+      const results = await service.apiService.categorySearch(categoryName);
 
-  const handleOnPress = async (categoryName:string) => {
-   try {
-        //  const trimmedSearch = search.trim();
-         if (!categoryName) return; // Prevent empty search
-         console.log("Search triggered with:", categoryName);
-   
-         // Fetch search results
-         const results = await service.apiService.categorySearch(categoryName);
-   
-         // Navigate to search results screen with query and results
-         router.push({
-           pathname: "/searchResults" as RelativePathString,
-           params: { query: categoryName, results: JSON.stringify(results) }, // Stringify results for safe navigation
-         });
-       } catch (error) {
-         console.error("Error fetching search results:", error);
-       }
+      // Navigate to search results screen with query and results
+      router.push({
+        pathname: "/searchResults",
+        params: { query: categoryName, results: JSON.stringify(results) },
+      });
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    } finally {
+      setLoading(false); // Hide loading indicator
+    }
   };
 
   return (
     <View style={styles.slideItemContainer}>
-      <TouchableOpacity onPress={()=>handleOnPress(category.name)}>
+      <TouchableOpacity onPress={() => handleOnPress(category.name)}>
         <View style={styles.cardContainer}>
           <Image source={{ uri: category.image }} style={styles.image} />
           <Text style={styles.cardText}>{category.name}</Text>
         </View>
       </TouchableOpacity>
+      {loading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      )}
     </View>
   );
 };
@@ -133,6 +138,16 @@ const styles = StyleSheet.create({
   slideContainer: {
     flex: 1,
     padding: 10,
+  },
+  loadingContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
 });
 
