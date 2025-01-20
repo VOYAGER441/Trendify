@@ -59,7 +59,7 @@ To run **Trendify** locally on your machine:
 Get the **Trendify** app now:
 
 - **From Expo**: [Download APK](https://expo.dev/accounts/voyager441/projects/Trendify/builds/9b7436c5-11a5-4bd6-9273-43e7f6b37ae8)  
-- **From Google Drive**: [Download APK](https://drive.google.com/uc?export=download&id=1n9-3G03Uqu8wgZz9w_MZXWTVy4l6o_-7)
+- **From Google Drive**: [Download APK](https://drive.google.com/uc?export=download&id=1T06HSmx4yxyI3dRBApkAyng5S5mQWPoJ)
 
 ---
 
