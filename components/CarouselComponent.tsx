@@ -24,7 +24,9 @@ const SlideItem = ({ category }: any) => {
       console.log("Search triggered with:", categoryName);
 
       // Fetch search results
-      const results = await service.apiService.categorySearch(categoryName);
+      let results = await service.apiService.searchByGNews(categoryName);
+
+      
 
       // Navigate to search results screen with query and results
       router.push({
